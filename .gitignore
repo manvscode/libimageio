@@ -1,17 +1,51 @@
-# Object files
+# Compiled Object files
+*.slo
+*.lo
 *.o
+*.obj
 
-# Libraries
-*.lib
-*.a
-
-# Shared objects (inc. Windows DLLs)
-*.dll
+# Compiled Dynamic libraries
 *.so
-*.so.*
-*.dylib
+*.dll
 
-# Executables
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Compiled Binaries
 *.exe
-*.out
-*.app
+
+
+# Log Files
+*.log
+
+# Test Programs 
+bin/8-puzzle*
+bin/15-puzzle*
+bin/pathfinding*
+
+# Autoconf files
+Makefile
+Makefile.in
+aclocal.m4
+configure
+libtool
+ltmain.sh
+autom4te.cache
+config.guess
+config.status
+config.sub
+bin/.libs
+bin/.dirstamp
+lib/.libs
+lib/.dirstamp
+src/.deps
+src/stamp-h1
+tests/.deps
+src/libcsearch-config.h
+src/libcsearch-config.h.in
+depcomp
+install-sh
+missing
