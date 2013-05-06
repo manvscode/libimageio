@@ -1,7 +1,7 @@
 AC_INIT([libimageio], [0.4], [manvscode@manvscode.com], [libimageio], [http://www.manvscode.com/])
 AM_INIT_AUTOMAKE([-Wall -Werror foreign])
 
-AM_SILENT_RULES([no])
+AM_SILENT_RULES([yes])
 #AC_CONFIG_HEADERS([src/libimageio-config.h])
 
 AC_PROG_CC
@@ -38,6 +38,22 @@ AC_PROG_LIBTOOL
 AM_PROG_LIBTOOL
 AC_PROG_RANLIB
 
+
+AC_CHECK_FUNCS([floor])
+AC_CHECK_FUNCS([memset])
+AC_CHECK_FUNCS([sqrt])
+AC_FUNC_MALLOC
+AC_HEADER_STDBOOL
+AC_TYPE_INT16_T
+AC_TYPE_INT32_T
+AC_TYPE_SIZE_T
+AC_TYPE_UINT16_T
+AC_TYPE_UINT32_T
+AC_TYPE_UINT8_T
+AC_PREREQ
+AC_PROG_AWK
+AC_PROG_LN_S
+AC_PROG_MAKE_SET
 
 
 AC_PROG_INSTALL

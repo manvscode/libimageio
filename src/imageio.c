@@ -534,7 +534,6 @@ bool imageio_png_save( const char* filename, const image_t* image )
 {
 	png_structp png_ptr;
 	png_infop info_ptr;
-	png_infop end_info;;
 	FILE *file;
 
 	if( !image )
