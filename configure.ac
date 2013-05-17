@@ -10,7 +10,7 @@ AC_PROG_CXX
 AC_C_INLINE
 AC_HEADER_STDC
 #AC_LANG([C++])
-AX_CXX_COMPILE_STDCXX_11 # C++11 support
+#AX_CXX_COMPILE_STDCXX_11 # C++11 support
 
 
 AH_TOP([
@@ -26,17 +26,17 @@ AC_C_BIGENDIAN
 
 #DFLAGS="-D DEBUG"
 
-CFLAGS="-Wall -pedantic -g -ggdb -O0 $DFLAGS -I/usr/local/include -lpng"
-CXXFLAGS="-Wall -pedantic -g -ggdb -O0 $DFLAGS -I/usr/local/include -lpng"
+CFLAGS="-Wall -pedantic -g -ggdb -O0 $DFLAGS -I/usr/local/include -I/opt/X11/include/libpng15 -L/opt/X11/lib"
+CXXFLAGS="-Wall -pedantic -g -ggdb -O0 $DFLAGS -I/usr/local/include "
 #CFLAGS="-Wall -pedantic -O3 -I/usr/local/include -lpng"
-LDFLAGS=""
+LDFLAGS="-lpng"
 
 
+AM_PROG_AR
 LT_INIT([shared static])
-
 AC_PROG_LIBTOOL
 AM_PROG_LIBTOOL
-AC_PROG_RANLIB
+#AC_PROG_RANLIB
 
 
 AC_CHECK_FUNCS([floor])
