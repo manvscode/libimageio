@@ -1371,12 +1371,12 @@ void imageio_detect_edges( uint32_t width, uint32_t height, uint32_t bits_per_pi
 			if( (R-rR)*(R-rR) + (G-rG)*(G-rG) + (B-rB)*(B-rB) >= k*k ||
 				(R-bR)*(R-bR) + (G-bG)*(G-bG) + (B-bB)*(B-bB) >= k*k ) /* if( D1 > k || D2 > k ) */
 			{
-				dst_bitmap[ pos ]     = 0xFF;
+				dst_bitmap[ pos + 0 ] = 0xFF;
 				dst_bitmap[ pos + 1 ] = 0xFF;
 				dst_bitmap[ pos + 2 ] = 0xFF;
 			}
 			else { /* otherwise place a black pixel; */
-				dst_bitmap[ pos ] = 0x00;
+				dst_bitmap[ pos + 0 ] = 0x00;
 				dst_bitmap[ pos + 1 ] = 0x00;
 				dst_bitmap[ pos + 2 ] = 0x00;
 			}
@@ -1400,18 +1400,18 @@ void imageio_extract_color( uint32_t width, uint32_t height, uint32_t bits_per_p
 		{
 			uint32_t pos = width * y * byte_count + x * byte_count;
 			/* this pixel */
-			uint8_t r_diff = src_bitmap[ pos     ] - r32(color);
+			uint8_t r_diff = src_bitmap[ pos + 0 ] - r32(color);
 			uint8_t g_diff = src_bitmap[ pos + 1 ] - g32(color);
 			uint8_t b_diff = src_bitmap[ pos + 2 ] - b32(color);
 
 			if( r_diff * r_diff + g_diff * g_diff + b_diff * b_diff <= k*k ) /*if( sqrt( (R-color->r) + (G-color->g) + (B-color->b) ) <= k )*/
 			{
-				dst_bitmap[ pos ] = 0xFF;
+				dst_bitmap[ pos + 0 ] = 0xFF;
 				dst_bitmap[ pos + 1 ] = 0xFF;
 				dst_bitmap[ pos + 2 ] = 0xFF;
 			}
 			else {
-				dst_bitmap[ pos ] = 0x00;
+				dst_bitmap[ pos + 0 ] = 0x00;
 				dst_bitmap[ pos + 1 ] = 0x00;
 				dst_bitmap[ pos + 2 ] = 0x00;
 			}
@@ -1552,5 +1552,72 @@ void imageio_modify_brightness( uint32_t width, uint32_t height, uint32_t bits_p
 			dst_bitmap[ pos + 1 ] = transform[ G ];
 			dst_bitmap[ pos + 2 ] = transform[ B ];
 		}
+	}
+}
+
+
+
+/*
+ * Y = 0.299R + 0.587G + 0.114B
+ * U'= (B-Y)*0.565
+ * V'= (R-Y)*0.713
+ */
+void imageio_rgb_to_yuv444( uint32_t width, uint32_t height, uint32_t byte_count, uint8_t* bitmap )
+{
+	register uint32_t imageIdx;
+	register uint32_t imageSize = width * height * byte_count;
+	assert( byte_count != 0 );
+	assert( bitmap != NULL );
+
+	if( byte_count > 2 ) /* 32 bpp or 24 bpp */
+	{
+		for( imageIdx = 0; imageIdx < imageSize; imageIdx += byte_count )
+		{
+			uint8_t R = bitmap[ imageIdx + 0 ];
+			uint8_t G = bitmap[ imageIdx + 1 ];
+			uint8_t B = bitmap[ imageIdx + 2 ];
+
+			uint8_t Y = 0.299 * R + 0.587 * G + 0.114 * B; /* Y */
+			bitmap[ imageIdx + 0 ] = Y; /* Y */
+			bitmap[ imageIdx + 1 ] = (B - Y) * 0.565; /* U' */
+			bitmap[ imageIdx + 2 ] = (R - Y) * 0.713; /* V' */
+		}
+	}
+	else
+	{
+		/* not implemented */
+		assert( false );
+	}
+}
+
+/*
+ * R = Y + 1.403V'
+ * G = Y - 0.344U' - 0.714V'
+ * B = Y + 1.770U'
+ */
+void imageio_yuv444_to_rgb( uint32_t width, uint32_t height, uint32_t byte_count, uint8_t* bitmap )
+{
+	register uint32_t imageIdx;
+	register uint32_t imageSize = width * height * byte_count;
+	assert( byte_count != 0 );
+	assert( bitmap != NULL );
+
+	if( byte_count > 2 ) /* 32 bpp or 24 bpp */
+	{
+		for( imageIdx = 0; imageIdx < imageSize; imageIdx += byte_count )
+		{
+			uint8_t Y = bitmap[ imageIdx + 0 ];
+			uint8_t U = bitmap[ imageIdx + 1 ];
+			uint8_t V = bitmap[ imageIdx + 2 ];
+
+			bitmap[ imageIdx + 0 ] = Y + 1.403 * V; /* R */
+			bitmap[ imageIdx + 1 ] = Y - 0.344 * U - 0.714 * V; /* G */
+			bitmap[ imageIdx + 2 ] = Y + 1.770 * U; /* B */
+		}
+	}
+	else
+	{
+		/* not implemented */
+		assert( false );
 	}
 }

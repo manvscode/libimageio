@@ -104,6 +104,8 @@ imageio_api void imageio_convert_to_grayscale     ( uint32_t width, uint32_t hei
 imageio_api void imageio_convert_to_colorscale    ( uint32_t width, uint32_t height, uint32_t bits_per_pixel, const uint8_t* src_bitmap, uint8_t* dst_bitmap, uint32_t color );
 imageio_api void imageio_modify_contrast          ( uint32_t width, uint32_t height, uint32_t bits_per_pixel, const uint8_t* src_bitmap, uint8_t* dst_bitmap, int contrast );
 imageio_api void imageio_modify_brightness        ( uint32_t width, uint32_t height, uint32_t bits_per_pixel, const uint8_t* src_bitmap, uint8_t* dst_bitmap, int brightness );
+imageio_api void imageio_rgb_to_yuv444            ( uint32_t width, uint32_t height, uint32_t byte_count, uint8_t* bitmap );
+imageio_api void imageio_yuv444_to_rgb            ( uint32_t width, uint32_t height, uint32_t byte_count, uint8_t* bitmap );
 
 
 #define rgba(r,g,b,a)	( r << 24 || g << 16 || b << 8 || a ) // 4 bytes
