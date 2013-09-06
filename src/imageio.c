@@ -1278,9 +1278,14 @@ void imageio_flip_vertically( uint32_t width, uint32_t height, uint32_t byte_cou
 
 	memcpy( src_bitmap, bitmap, sizeof(uint8_t) * width * height * byte_count );
 
+	#if 1
+	for( y = 0; y < height; y++ )
+		memcpy( &bitmap[ pixel_index(0, height - y - 1, byte_count, width) ], &src_bitmap[ pixel_index(0, y, byte_count, width) ], sizeof(uint8_t) * byte_count * width );
+	#else
 	for( y = 0; y < height; y++ )
 		for( x = 0; x < width; x++ )
-			memcpy( &bitmap[ pixel_index(x, height - y - 1, byte_count, width) ], &src_bitmap[ pixel_index(x, y, byte_count, width) ], sizeof(uint8_t) * byte_count );
+			memcpy( &bitmap[ pixel_index(x, height - y - 1, byte_count, width) ], &src_bitmap[ pixel_index(x, y, byte_count, width) ], sizeof(uint8_t) * byte_count * width );
+	#endif
 
 	free( src_bitmap );
 }
