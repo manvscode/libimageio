@@ -157,10 +157,10 @@ void render( void )
 
 	glBindTexture( GL_TEXTURE_2D, texture );
 	glBegin( GL_QUADS );
-		glVertex2i( -1, -1 );  glTexCoord2i( 0, 1 );
-		glVertex2i( 1, -1 );  glTexCoord2i( 0, 0 );
-		glVertex2i( 1, 1 );  glTexCoord2i( -1, 0 );
-		glVertex2i( -1, 1 );  glTexCoord2i( -1, 1 );
+		glVertex2i( -1, -1 );  glTexCoord2i( 1,  0 );
+		glVertex2i(  1, -1 );  glTexCoord2i( 1, -1 );
+		glVertex2i(  1,  1 );  glTexCoord2i( 0, -1 );
+		glVertex2i( -1,  1 );  glTexCoord2i( 0,  0 );
 	glEnd( );
 
 	/* Write text */
