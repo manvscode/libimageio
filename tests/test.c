@@ -24,7 +24,7 @@
 #include <string.h>
 #include <math.h>
 #include <assert.h>
-#include <imageio.h>
+#include "../src/imageio.h"
 
 #define ESC_KEY			27
 

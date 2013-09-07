@@ -1272,16 +1272,17 @@ void imageio_flip_horizontally( uint32_t width, uint32_t height, uint32_t byte_c
 
 void imageio_flip_vertically( uint32_t width, uint32_t height, uint32_t byte_count, uint8_t* bitmap )
 {
-	register uint32_t x = 0;
-	register uint32_t y = 0;
 	uint8_t* src_bitmap = (uint8_t*) malloc( sizeof(uint8_t) * width * height * byte_count );
 
 	memcpy( src_bitmap, bitmap, sizeof(uint8_t) * width * height * byte_count );
 
 	#if 1
+	register uint32_t y = 0;
 	for( y = 0; y < height; y++ )
 		memcpy( &bitmap[ pixel_index(0, height - y - 1, byte_count, width) ], &src_bitmap[ pixel_index(0, y, byte_count, width) ], sizeof(uint8_t) * byte_count * width );
 	#else
+	register uint32_t x = 0;
+	register uint32_t y = 0;
 	for( y = 0; y < height; y++ )
 		for( x = 0; x < width; x++ )
 			memcpy( &bitmap[ pixel_index(x, height - y - 1, byte_count, width) ], &src_bitmap[ pixel_index(x, y, byte_count, width) ], sizeof(uint8_t) * byte_count * width );

@@ -6,7 +6,7 @@
 bin_PROGRAMS = \
 $(top_builddir)/bin/test
 
-__top_builddir__bin_test_CFLAGS   = -std=c99 -pg -g -ggdb -O0 -I$(top_builddir)/src/ -I. -I.. -I/usr/local/include/ -L$(top_builddir)/lib/  -L/usr/local/lib -L/usr/lib64
-__top_builddir__bin_test_CXXFLAGS = -std=c++0x -pg -g -ggdb -O0 -I$(top_builddir)/src/ -I. -I.. -I/usr/local/include/ -L$(top_builddir)/lib/  -L/usr/local/lib -L/usr/lib64
+#__top_builddir__bin_test_CFLAGS   = -std=c99 -pg -g -ggdb -O0 -I$(top_builddir)/src/ -I. -I.. -I/usr/local/include/ -L$(top_builddir)/lib/  -L/usr/local/lib -L/usr/lib64
+#__top_builddir__bin_test_CXXFLAGS = -std=c++0x -pg -g -ggdb -O0 -I$(top_builddir)/src/ -I. -I.. -I/usr/local/include/ -L$(top_builddir)/lib/  -L/usr/local/lib -L/usr/lib64
 __top_builddir__bin_test_LDFLAGS  = -lGL -lglut $(top_builddir)/lib/.libs/libimageio.a
 __top_builddir__bin_test_SOURCES  = test.c
