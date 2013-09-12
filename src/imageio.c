@@ -845,8 +845,8 @@ void imageio_resize_bilinear_sharper_rgba( uint32_t src_width, uint32_t src_heig
 	float verticalStretchFactor = 0;
 	register uint32_t srcY = 0;
 	register uint32_t srcX = 0;
-	register uint32_t dstPos, srcPos,
-		 neighborPos1,
+	register uint32_t dstPos, srcPos;
+	register int32_t neighborPos1,
 		 neighborPos2,
 		 neighborPos3,
 		 neighborPos4;
@@ -1009,8 +1009,8 @@ void imageio_resize_bilinear_sharper_rgb( uint32_t src_width, uint32_t src_heigh
 	float verticalStretchFactor = 0;
 	register uint32_t srcY = 0;
 	register uint32_t srcX = 0;
-	register uint32_t dstPos, srcPos,
-		 neighborPos1,
+	register uint32_t dstPos, srcPos;
+	register int32_t neighborPos1,
 		 neighborPos2,
 		 neighborPos3,
 		 neighborPos4;
