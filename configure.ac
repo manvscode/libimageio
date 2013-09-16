@@ -26,9 +26,8 @@ AC_C_BIGENDIAN
 
 #DFLAGS="-D DEBUG"
 
-CFLAGS="-Wall -pedantic -g -ggdb -O0 $DFLAGS -I/usr/local/include -I/opt/X11/include/libpng15 -L/opt/X11/lib"
-CXXFLAGS="-Wall -pedantic -g -ggdb -O0 $DFLAGS -I/usr/local/include "
-#CFLAGS="-Wall -pedantic -O3 -I/usr/local/include -lpng"
+#CFLAGS="-Wall -pedantic -g -ggdb -O0 $DFLAGS -I/usr/local/include -I/opt/X11/include/libpng15 -L/opt/X11/lib"
+CFLAGS="-Wall -pedantic -O3 -I/usr/local/include -lpng"
 LDFLAGS="-lm -lpng"
 
 
