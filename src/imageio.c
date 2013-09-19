@@ -131,7 +131,7 @@ bool imageio_image_load( image_t* img, const char* filename, image_file_format_t
 
 	switch( format )
 	{
-		case BMP:
+		case IMAGEIO_BMP:
 		{
 			bitmap_info_header_t bmpInfoHeader;
 			result = imageio_bitmap_load( filename, &bmpInfoHeader, &img->pixels );
@@ -141,7 +141,7 @@ bool imageio_image_load( image_t* img, const char* filename, image_file_format_t
 			img->height = bmpInfoHeader.biHeight;
 			break;
 		}
-		case TGA:
+		case IMAGEIO_TGA:
 		{
 			targa_file_header_t tgaHeader;
 			result = imageio_targa_load( filename, &tgaHeader, &img->pixels );
@@ -151,7 +151,7 @@ bool imageio_image_load( image_t* img, const char* filename, image_file_format_t
 			img->height = tgaHeader.height;
 			break;
 		}
-		case PNG:
+		case IMAGEIO_PNG:
 		{
 			result = imageio_png_load( filename, img );
 			break;
@@ -170,13 +170,13 @@ bool imageio_image_save( image_t* img, const char* filename, image_file_format_t
 
 	switch( format )
 	{
-		case BMP:
+		case IMAGEIO_BMP:
 		{
 			result = imageio_bitmap_save( filename, img->width, img->height, img->bits_per_pixel, img->pixels );
 			assert( img->pixels != NULL );
 			break;
 		}
-		case TGA:
+		case IMAGEIO_TGA:
 		{
 			targa_file_header_t tgaFileHeader;
 			tgaFileHeader.bitCount = img->bits_per_pixel;
@@ -185,7 +185,7 @@ bool imageio_image_save( image_t* img, const char* filename, image_file_format_t
 			result = imageio_targa_save( filename, &tgaFileHeader, img->pixels );
 			break;
 		}
-		case PNG:
+		case IMAGEIO_PNG:
 		{
 			result = imageio_png_save( filename, img );
 			break;

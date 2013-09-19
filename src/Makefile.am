@@ -11,5 +11,5 @@ library_include_HEADERS = $(libimageio_headers)
 # Library
 lib_LTLIBRARIES                           = $(top_builddir)/lib/libimageio.la 
 __top_builddir__lib_libimageio_la_SOURCES = $(libimageio_src)
-__top_builddir__lib_libimageio_la_LIBADD  = 
+__top_builddir__lib_libimageio_la_LIBADD  = -lpng
 

@@ -66,10 +66,21 @@ typedef unsigned int   uint32_t;
 
 
 imageio_api typedef enum imageio_file_format {
-	BMP,
-	TGA,
-	PNG
+	IMAGEIO_BMP,
+	IMAGEIO_TGA,
+	IMAGEIO_PNG
 } image_file_format_t;
+
+/* deprecated flags */
+#ifndef BMP
+#define BMP  IMAGEIO_BMP
+#endif
+#ifndef TGA
+#define TGA  IMAGEIO_TGA
+#endif
+#ifndef PNG
+#define PNG  IMAGEIO_PNG
+#endif
 
 imageio_api typedef enum imageio_resize_algorithm {
 	ALG_NEARESTNEIGHBOR,
