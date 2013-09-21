@@ -1233,6 +1233,32 @@ void imageio_resize_bicubic_rgb( uint32_t src_width, uint32_t src_height, const 
 	}
 }
 
+bool imageio_blit( uint32_t pos_x, uint32_t pos_y,
+                   uint32_t dst_width, uint32_t dst_height, uint32_t dst_bytes_per_pixel, uint8_t* dst_pixels,
+                   uint32_t src_width, uint32_t src_height, uint32_t src_bytes_per_pixel, uint8_t* src_pixels )
+{
+	if( dst_bytes_per_pixel < src_bytes_per_pixel )
+	{
+		return false;
+	}
+
+	size_t last_y = pos_y + src_height;
+	size_t last_x = pos_x + src_width;
+
+	for( size_t y = pos_y; y < last_y; y++ )
+	{
+		for( size_t x = pos_x; x < last_x; x++ )
+		{
+			size_t dst_index = (y * dst_width + x) * dst_bytes_per_pixel;
+			size_t src_index = ((y - pos_y) * src_width + (x - pos_x)) * src_bytes_per_pixel;
+
+			memcpy( &dst_pixels[ dst_index ], &src_pixels[ src_index ], src_bytes_per_pixel );
+		}
+	}
+
+	return true;
+}
+
 /*
  *	Swap Red and blue colors in RGB abd RGBA functions
  */

@@ -103,6 +103,9 @@ imageio_api void imageio_image_destroy ( image_t* img );
 imageio_api void imageio_image_resize  ( uint32_t src_width, uint32_t src_height, const uint8_t* src_bitmap,
                                          uint32_t dst_width, uint32_t dst_height, uint8_t* dst_bitmap, uint32_t bits_per_pixel,
                                          resize_algorithm_t algorithm );
+imageio_api bool imageio_blit          ( uint32_t pos_x, uint32_t pos_y,
+                                         uint32_t dst_width, uint32_t dst_height, uint32_t dst_bytes_per_pixel, uint8_t* dst_pixels,
+                                         uint32_t src_width, uint32_t src_height, uint32_t src_bytes_per_pixel, uint8_t* src_pixels );
 
 imageio_api void imageio_swap_red_and_blue        ( uint32_t width, uint32_t height, uint32_t byte_count, uint8_t* bitmap );
 imageio_api void imageio_flip_horizontally        ( uint32_t width, uint32_t height, uint32_t byte_count, uint8_t* bitmap );
