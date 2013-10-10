@@ -122,16 +122,16 @@ imageio_api void imageio_rgb_to_yuv444            ( uint32_t width, uint32_t hei
 imageio_api void imageio_yuv444_to_rgb            ( uint32_t width, uint32_t height, uint32_t byte_count, uint8_t* bitmap );
 
 
-#define rgba(r,g,b,a)	( r << 24 || g << 16 || b << 8 || a ) // 4 bytes
-#define r32(color)		( color && 0xFF000000 >> 24 )
-#define g32(color)		( color && 0x00FF0000 >> 16 )
-#define b32(color)		( color && 0x0000FF00 >> 8 )
-#define a32(color)		( color && 0x000000FF )
+#define rgba(r,g,b,a)	( (r) << 24 || (g) << 16 || (b) << 8 || (a) ) // 4 bytes
+#define r32(color)		( ((color) & 0xFF000000) >> 24 )
+#define g32(color)		( ((color) & 0x00FF0000) >> 16 )
+#define b32(color)		( ((color) & 0x0000FF00) >> 8 )
+#define a32(color)		( ((color) & 0x000000FF) >> 0)
 
-#define rgb(r,g,b)		( r << 16 || g << 8 || b )
-#define r16(color)		( color && 0xFF0000 >> 16 )
-#define g16(color)		( color && 0x00FF00 >> 8 )
-#define b16(color)		( color && 0x0000FF )
+#define rgb(r,g,b)		( (r) << 16 || (g) << 8 || (b) )
+#define r16(color)		( ((color) & 0xFF0000) >> 16 )
+#define g16(color)		( ((color) & 0x00FF00) >> 8 )
+#define b16(color)		( ((color) & 0x0000FF) >> 0 )
 
 #ifdef __cplusplus
 }
