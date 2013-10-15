@@ -1,5 +1,5 @@
 AC_PREREQ(2.67)
-AC_INIT([libimageio], [0.4], [manvscode@manvscode.com], [libimageio], [http://www.manvscode.com/])
+AC_INIT([libimageio], [0.6], [manvscode@manvscode.com], [libimageio], [http://www.manvscode.com/])
 AM_INIT_AUTOMAKE([-Wall -Werror foreign])
 
 AM_SILENT_RULES([yes])
@@ -25,8 +25,7 @@ AC_C_BIGENDIAN
 #DFLAGS="-D DEBUG"
 
 #CFLAGS="-Wall -pedantic -g -ggdb -O0 $DFLAGS -I/usr/local/include -I/opt/X11/include/libpng15 -L/opt/X11/lib $CFLAGS"
-CFLAGS="-Wall -pedantic $CFLAGS"
-#CFLAGS="-Wall -pedantic -O3 -I/usr/local/include $CFLAGS"
+CFLAGS="$CFLAGS"
 LDFLAGS="-lm -lpng $LDFLAGS"
 
 
@@ -34,7 +33,6 @@ AM_PROG_AR
 LT_INIT([shared static])
 AC_PROG_LIBTOOL
 AM_PROG_LIBTOOL
-#AC_PROG_RANLIB
 
 
 AC_CHECK_FUNCS([floor])
@@ -55,7 +53,6 @@ AC_PROG_INSTALL
 echo " ------------------------------ "
 echo ""
 echo "   CFLAGS = $CFLAGS"
-echo " CXXFLAGS = $CFLAGS"
 echo "  LDFLAGS = $LDFLAGS"
 echo ""
 echo " ------------------------------ "
