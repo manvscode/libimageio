@@ -495,7 +495,7 @@ bool imageio_png_load( const char* filename, image_t* image )
 	/*number_of_passes = png_set_interlace_handling( png_ptr );*/
 	png_read_update_info( png_ptr, info_ptr);
 
-    int row_bytes = png_get_rowbytes( png_ptr, info_ptr );
+    png_size_t row_bytes = png_get_rowbytes( png_ptr, info_ptr );
 
     // glTexImage2d requires rows to be 4-byte aligned
     //row_bytes += 3 - ((row_bytes-1) % 4);
@@ -1115,7 +1115,7 @@ void imageio_resize_bicubic_rgba( uint32_t src_width, uint32_t src_height, const
 	register float srcX = 0;
 	register float dy = 0;
 	register float dx = 0;
-	register uint32_t dstPos, srcPos;
+	register size_t dstPos, srcPos;
 	uint32_t largestSrcIndex = src_width * src_height * byte_count;
 	register uint32_t sumR = 0;
 	register uint32_t sumG = 0;
@@ -1182,7 +1182,7 @@ void imageio_resize_bicubic_rgb( uint32_t src_width, uint32_t src_height, const 
 	register float srcX = 0;
 	register float dy = 0;
 	register float dx = 0;
-	register uint32_t dstPos, srcPos;
+	register size_t dstPos, srcPos;
 	uint32_t largestSrcIndex = src_width * src_height * byte_count;
 	register uint32_t sumR = 0;
 	register uint32_t sumG = 0;
