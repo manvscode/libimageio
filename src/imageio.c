@@ -116,10 +116,29 @@ imageio_api typedef struct imageio_targa_file_header {
 #pragma pack(pop)
 
 
+
+typedef struct pvr_header {
+    uint32_t header_length;
+    uint32_t height;
+    uint32_t width;
+    uint32_t num_mipmaps;
+    uint32_t flags;
+    uint32_t data_length;
+    uint32_t bits_per_pixel;
+    uint32_t bitmask_red;
+    uint32_t bitmask_green;
+    uint32_t bitmask_blue;
+    uint32_t bitmask_alpha;
+    uint32_t pvr_tag;
+    uint32_t num_surfs;
+} pvr_header_t;
+
+
 static __inline bool imageio_bitmap_load ( const char* filename, bitmap_info_header_t* info_header, uint8_t** bitmap );
 static __inline bool imageio_bitmap_save ( const char* filename, uint32_t width, uint32_t height, uint32_t bits_per_pixel, uint8_t* imageData );
 static __inline bool imageio_targa_load  ( const char* filename, targa_file_header_t* p_file_header, uint8_t** bitmap );
 static __inline bool imageio_targa_save  ( const char* filename, targa_file_header_t* p_file_header, uint8_t* bitmap );
+static __inline bool imageio_pvr_load    ( const char* filename, pvr_header_t* p_header, uint8_t** bitmap );
 
 static __inline bool imageio_png_load ( const char* filename, image_t* image );
 static __inline bool imageio_png_save ( const char* filename, const image_t* image );
@@ -150,8 +169,8 @@ bool imageio_image_load( image_t* img, const char* filename, image_file_format_t
 			result = imageio_bitmap_load( filename, &bmpInfoHeader, &img->pixels );
 			assert( img->pixels != NULL );
 			img->bits_per_pixel = bmpInfoHeader.biBitCount;
-			img->width = bmpInfoHeader.biWidth;
-			img->height = bmpInfoHeader.biHeight;
+			img->width          = bmpInfoHeader.biWidth;
+			img->height         = bmpInfoHeader.biHeight;
 			break;
 		}
 		case IMAGEIO_TGA:
@@ -160,13 +179,23 @@ bool imageio_image_load( image_t* img, const char* filename, image_file_format_t
 			result = imageio_targa_load( filename, &tgaHeader, &img->pixels );
 			assert( img->pixels != NULL );
 			img->bits_per_pixel = tgaHeader.bitCount;
-			img->width = tgaHeader.width;
-			img->height = tgaHeader.height;
+			img->width          = tgaHeader.width;
+			img->height         = tgaHeader.height;
 			break;
 		}
 		case IMAGEIO_PNG:
 		{
 			result = imageio_png_load( filename, img );
+			break;
+		}
+		case IMAGEIO_PVR:
+		{
+			pvr_header_t header;
+			result = imageio_pvr_load( filename, &header, &img->pixels );
+			assert( img->pixels != NULL );
+			img->bits_per_pixel = header.bits_per_pixel;
+			img->width          = header.width;
+			img->height         = header.height;
 			break;
 		}
 		default:
@@ -382,7 +411,6 @@ bool imageio_targa_save( const char* filename, targa_file_header_t* p_file_heade
 	long imageSize;		/* size of the Targa image */
 	uint32_t colorMode = p_file_header->bitCount >> 3; /* 4 for RGBA or 3 for RGB */
 
-
 	if( ( filePtr = fopen( filename, "wb" ) ) == NULL )
 	{
 		return false;
@@ -408,6 +436,42 @@ bool imageio_targa_save( const char* filename, targa_file_header_t* p_file_heade
 	fwrite( bitmap, imageSize, 1, filePtr );
 
 	fclose( filePtr );
+	return true;
+}
+
+bool imageio_pvr_load( const char* filename, pvr_header_t* p_header, uint8_t** bitmap )
+{
+	FILE* file;
+
+	if( (file = fopen( filename, "rb" )) == NULL )
+	{
+		return false;
+	}
+
+	/* Read in pvr header */
+	fread( p_header, sizeof(pvr_header_t), 1, file );
+
+	fseek( file, 0, SEEK_END );
+	size_t file_size = ftell( file );
+
+	/* Jump to start of pixel data */
+	fseek( file, p_header->header_length, SEEK_SET );
+
+	size_t image_size = p_header->data_length;
+
+	uint8_t* pixel_data = malloc( image_size );
+
+	if( pixel_data )
+	{
+		fread( pixel_data, image_size, 1, file );
+	}
+	else
+	{
+		return false;
+	}
+
+	*bitmap = pixel_data;
+	fclose( file );
 	return true;
 }
 

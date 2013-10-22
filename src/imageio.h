@@ -68,7 +68,8 @@ typedef unsigned int   uint32_t;
 imageio_api typedef enum imageio_file_format {
 	IMAGEIO_BMP,
 	IMAGEIO_TGA,
-	IMAGEIO_PNG
+	IMAGEIO_PNG,
+	IMAGEIO_PVR /* Compressed Texture Format */
 } image_file_format_t;
 
 /* deprecated flags */
