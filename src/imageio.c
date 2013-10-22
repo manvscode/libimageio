@@ -451,9 +451,6 @@ bool imageio_pvr_load( const char* filename, pvr_header_t* p_header, uint8_t** b
 	/* Read in pvr header */
 	fread( p_header, sizeof(pvr_header_t), 1, file );
 
-	fseek( file, 0, SEEK_END );
-	size_t file_size = ftell( file );
-
 	/* Jump to start of pixel data */
 	fseek( file, p_header->header_length, SEEK_SET );
 
