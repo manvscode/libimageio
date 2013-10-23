@@ -169,6 +169,7 @@ bool imageio_image_load( image_t* img, const char* filename, image_file_format_t
 			result = imageio_bitmap_load( filename, &bmpInfoHeader, &img->pixels );
 			assert( img->pixels != NULL );
 			img->bits_per_pixel = bmpInfoHeader.biBitCount;
+			img->channels       = bmpInfoHeader.biBitCount >> 3;
 			img->width          = bmpInfoHeader.biWidth;
 			img->height         = bmpInfoHeader.biHeight;
 			break;
@@ -179,6 +180,7 @@ bool imageio_image_load( image_t* img, const char* filename, image_file_format_t
 			result = imageio_targa_load( filename, &tgaHeader, &img->pixels );
 			assert( img->pixels != NULL );
 			img->bits_per_pixel = tgaHeader.bitCount;
+			img->channels       = tgaHeader.bitCount >> 3;
 			img->width          = tgaHeader.width;
 			img->height         = tgaHeader.height;
 			break;
@@ -194,6 +196,7 @@ bool imageio_image_load( image_t* img, const char* filename, image_file_format_t
 			result = imageio_pvr_load( filename, &header, &img->pixels );
 			assert( img->pixels != NULL );
 			img->bits_per_pixel = header.bits_per_pixel;
+			img->channels       = header.bitmask_alpha > 0 ? 4 : 3;
 			img->width          = header.width;
 			img->height         = header.height;
 			break;
@@ -542,9 +545,11 @@ bool imageio_png_load( const char* filename, image_t* image )
 	{
 		case PNG_COLOR_TYPE_RGB:
 			image->bits_per_pixel = 3 * png_get_bit_depth( png_ptr, info_ptr );
+			image->channels       = 3;
 			break;
 		case PNG_COLOR_TYPE_RGB_ALPHA:
 			image->bits_per_pixel = 4 * png_get_bit_depth( png_ptr, info_ptr );
+			image->channels       = 4;
 			break;
 		default:
 			/* paletted types and grayscale not supported */
