@@ -31,7 +31,9 @@ Makefile
 Makefile.in
 aclocal.m4
 configure
+ar-lib
 libtool
+compile
 ltmain.sh
 autom4te.cache
 config.guess
