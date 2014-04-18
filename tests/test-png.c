@@ -3,7 +3,8 @@
 #include <err.h>
 #include "../src/imageio.h"
 
-int main( int argc, char* argv[] )
+
+void png_save32( void )
 {
 	image_t image;
 	image.width          = 512;
@@ -30,9 +31,45 @@ int main( int argc, char* argv[] )
 		}
 	}
 
-	if( !imageio_image_save( &image, "test.png", IMAGEIO_PNG ) )
+	if( !imageio_image_save( &image, "test-32bpp.png", IMAGEIO_PNG ) )
 	{
 		perror( "ERROR" );
 	}
+}
+
+void png_save8( void )
+{
+	image_t image;
+	image.width          = 512;
+	image.height         = 512;
+	image.bits_per_pixel = 8;
+	size_t len           = 1 * 512 * 512;
+	image.pixels         = (uint8_t*) malloc( sizeof(uint8_t) * len );
+
+	for( size_t i = 0; i < 512; i++ )
+	{
+		for( size_t j = 0; j < 512; j++ )
+		{
+			if( i == j || (511 - i) == j )
+			{
+				image.pixels[ i * 512 + j ] = 0xFF;
+			}
+			else
+			{
+				image.pixels[ i * 512 + j ] = 0x00;
+			}
+		}
+	}
+
+	if( !imageio_image_save( &image, "test-8bpp.png", IMAGEIO_PNG ) )
+	{
+		perror( "ERROR" );
+	}
+}
+
+int main( int argc, char* argv[] )
+{
+	//png_save32( );
+	png_save8( );
 	return 0;
 }

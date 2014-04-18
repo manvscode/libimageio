@@ -665,7 +665,11 @@ bool imageio_png_save( const char* filename, const image_t* image )
 			color_type = PNG_COLOR_TYPE_RGB_ALPHA;
 			break;
 		case 3:
+		case 2:
 			color_type = PNG_COLOR_TYPE_RGB;
+			break;
+		case 1:
+			color_type = PNG_COLOR_TYPE_GRAY;
 			break;
 		default:
 			png_destroy_write_struct( &png_ptr, &info_ptr );
