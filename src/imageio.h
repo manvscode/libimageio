@@ -99,6 +99,7 @@ imageio_api typedef struct imageio_image {
 } image_t;
 
 
+imageio_api bool imageio_load          ( image_t* img, const char* filename );
 imageio_api bool imageio_image_load    ( image_t* img, const char* filename, image_file_format_t format );
 imageio_api bool imageio_image_save    ( image_t* img, const char* filename, image_file_format_t format );
 imageio_api void imageio_image_destroy ( image_t* img );

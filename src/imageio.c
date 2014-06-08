@@ -151,8 +151,71 @@ static __inline void imageio_resize_bilinear_sharper_rgb  ( uint32_t src_width, 
 static __inline void imageio_resize_bicubic_rgba          ( uint32_t src_width, uint32_t src_height, const uint8_t* src_bitmap, uint32_t dst_width, uint32_t dst_height, uint8_t* dst_bitmap, uint32_t byte_count );
 static __inline void imageio_resize_bicubic_rgb           ( uint32_t src_width, uint32_t src_height, const uint8_t* src_bitmap, uint32_t dst_width, uint32_t dst_height, uint8_t* dst_bitmap, uint32_t byte_count );
 
+static __inline bool is_power_of_2( uint16_t x )
+{
+	return (x & (x - 1)) == 0;
+}
 
+bool imageio_load( image_t* img, const char* filename )
+{
+	bool result = false;
+	const char* extension = strrchr( filename, '.' );
+	image_file_format_t format = IMAGEIO_PNG;
+	image_t image;
 
+	if( extension )
+	{
+		extension += 1;
+
+		if( strcasecmp( "png", extension ) == 0 )
+		{
+			format = IMAGEIO_PNG;
+		}
+		else if( strcasecmp( "bmp", extension ) == 0 )
+		{
+			format = IMAGEIO_BMP;
+		}
+		else if( strcasecmp( "tga", extension ) == 0 )
+		{
+			format = IMAGEIO_TGA;
+		}
+		else if( strcasecmp( "pvr", extension ) == 0 || strcasecmp( "pvrtc", extension ) == 0 )
+		{
+			format = IMAGEIO_PVR;
+		}
+		else
+		{
+			goto failure;
+		}
+	}
+
+	if( imageio_image_load( &image, filename, format ) )
+	{
+		if( format == IMAGEIO_PVR )
+		{
+			if( !is_power_of_2(image.width) || !is_power_of_2(image.height) )
+			{
+				   /* iOS devices require texture dimensions to be
+					* a power of 2.
+					*/
+				   imageio_image_destroy( &image );
+				   goto failure;
+			}
+		}
+		else if( format == IMAGEIO_PNG )
+		{
+			/* These pesky PNG files need to be flipped vertically to be
+			 * correctly oriented for OpenGL.
+			 */
+			imageio_flip_vertically( image.width, image.height, image.bits_per_pixel >> 3, image.pixels );
+		}
+
+		result = true;
+	}
+
+failure:
+	return result;
+}
 
 bool imageio_image_load( image_t* img, const char* filename, image_file_format_t format )
 {
