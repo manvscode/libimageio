@@ -161,7 +161,6 @@ bool imageio_load( image_t* img, const char* filename )
 	bool result = false;
 	const char* extension = strrchr( filename, '.' );
 	image_file_format_t format = IMAGEIO_PNG;
-	image_t image;
 
 	if( extension )
 	{
@@ -189,16 +188,16 @@ bool imageio_load( image_t* img, const char* filename )
 		}
 	}
 
-	if( imageio_image_load( &image, filename, format ) )
+	if( imageio_image_load( img, filename, format ) )
 	{
 		if( format == IMAGEIO_PVR )
 		{
-			if( !is_power_of_2(image.width) || !is_power_of_2(image.height) )
+			if( !is_power_of_2(img->width) || !is_power_of_2(img->height) )
 			{
 				   /* iOS devices require texture dimensions to be
 					* a power of 2.
 					*/
-				   imageio_image_destroy( &image );
+				   imageio_image_destroy( img );
 				   goto failure;
 			}
 		}
@@ -207,7 +206,7 @@ bool imageio_load( image_t* img, const char* filename )
 			/* These pesky PNG files need to be flipped vertically to be
 			 * correctly oriented for OpenGL.
 			 */
-			imageio_flip_vertically( image.width, image.height, image.bits_per_pixel >> 3, image.pixels );
+			imageio_flip_vertically( img->width, img->height, img->bits_per_pixel >> 3, img->pixels );
 		}
 
 		result = true;
