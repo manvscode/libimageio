@@ -208,6 +208,11 @@ bool imageio_load( image_t* img, const char* filename )
 			 */
 			imageio_flip_vertically( img->width, img->height, img->bits_per_pixel >> 3, img->pixels );
 		}
+		else if( format == IMAGEIO_BMP )
+		{
+			//imageio_flip_horizontally( img->width, img->height, img->bits_per_pixel >> 3, img->pixels );
+			//imageio_flip_vertically( img->width, img->height, img->bits_per_pixel >> 3, img->pixels );
+		}
 
 		result = true;
 	}
@@ -229,22 +234,28 @@ bool imageio_image_load( image_t* img, const char* filename, image_file_format_t
 		{
 			bitmap_info_header_t bmpInfoHeader;
 			result = imageio_bitmap_load( filename, &bmpInfoHeader, &img->pixels );
-			assert( img->pixels != NULL );
-			img->bits_per_pixel = bmpInfoHeader.biBitCount;
-			img->channels       = bmpInfoHeader.biBitCount >> 3;
-			img->width          = bmpInfoHeader.biWidth;
-			img->height         = bmpInfoHeader.biHeight;
+			if( result )
+			{
+				assert( img->pixels != NULL );
+				img->bits_per_pixel = bmpInfoHeader.biBitCount;
+				img->channels       = bmpInfoHeader.biBitCount >> 3;
+				img->width          = bmpInfoHeader.biWidth;
+				img->height         = bmpInfoHeader.biHeight;
+			}
 			break;
 		}
 		case IMAGEIO_TGA:
 		{
 			targa_file_header_t tgaHeader;
 			result = imageio_targa_load( filename, &tgaHeader, &img->pixels );
-			assert( img->pixels != NULL );
-			img->bits_per_pixel = tgaHeader.bitCount;
-			img->channels       = tgaHeader.bitCount >> 3;
-			img->width          = tgaHeader.width;
-			img->height         = tgaHeader.height;
+			if( result )
+			{
+				assert( img->pixels != NULL );
+				img->bits_per_pixel = tgaHeader.bitCount;
+				img->channels       = tgaHeader.bitCount >> 3;
+				img->width          = tgaHeader.width;
+				img->height         = tgaHeader.height;
+			}
 			break;
 		}
 		case IMAGEIO_PNG:
@@ -256,11 +267,14 @@ bool imageio_image_load( image_t* img, const char* filename, image_file_format_t
 		{
 			pvr_header_t header;
 			result = imageio_pvr_load( filename, &header, &img->pixels );
-			assert( img->pixels != NULL );
-			img->bits_per_pixel = header.bits_per_pixel;
-			img->channels       = header.bitmask_alpha > 0 ? 4 : 3;
-			img->width          = header.width;
-			img->height         = header.height;
+			if( result )
+			{
+				assert( img->pixels != NULL );
+				img->bits_per_pixel = header.bits_per_pixel;
+				img->channels       = header.bitmask_alpha > 0 ? 4 : 3;
+				img->width          = header.width;
+				img->height         = header.height;
+			}
 			break;
 		}
 		default:
@@ -315,15 +329,15 @@ void imageio_image_destroy( image_t* img )
 
 bool imageio_bitmap_load( const char* filename, bitmap_info_header_t* info_header, uint8_t** bitmap )
 {
-	FILE				*filePtr;
 	bitmap_file_header_t bmp_file_header;
 	register uint32_t		imageIdx = 0;
 	unsigned short bytesPerPixel = 0;
 	uint32_t bitmapSize = 0;
 	uint32_t scanlineBytes = 0;
 	uint32_t stride = 0;
+	FILE* filePtr = fopen( filename, "rb" );
 
-	if( (filePtr = fopen( filename, "rb" )) == NULL )
+	if( !filePtr )
 	{
 		*bitmap = NULL;
 		return false;
@@ -428,11 +442,11 @@ bool imageio_bitmap_save( const char* filename, uint32_t width, uint32_t height,
 
 bool imageio_targa_load( const char* filename, targa_file_header_t* p_file_header, uint8_t** bitmap )
 {
-	FILE* filePtr;
 	uint32_t colorMode;		/* 4 for RGBA or 3 for RGB */
 	uint32_t imageSize = 0;
+	FILE* filePtr = fopen( filename, "rb" );
 
-	if( (filePtr = fopen( filename, "rb" )) == NULL )
+	if( !filePtr )
 	{
 		return false;
 	}
@@ -1797,4 +1811,14 @@ void imageio_yuv444_to_rgb( uint32_t width, uint32_t height, uint32_t byte_count
 		/* not implemented */
 		assert( false );
 	}
+}
+
+const char* imageio_image_string( const image_t* img )
+{
+	static char buffer[ 512 ];
+	snprintf( buffer, sizeof(buffer), "[image bpp=%02u channels=%u w=%05u h=%05u data=%02x%02x%02x%02x... ]",
+	          img->bits_per_pixel, img->channels, img->width, img->height,
+	          img->pixels[0], img->pixels[1], img->pixels[2], img->pixels[3] );
+	buffer[ sizeof(buffer) - 1 ] = '\0';
+	return buffer;
 }

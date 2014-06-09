@@ -124,6 +124,8 @@ imageio_api void imageio_modify_brightness        ( uint32_t width, uint32_t hei
 imageio_api void imageio_rgb_to_yuv444            ( uint32_t width, uint32_t height, uint32_t byte_count, uint8_t* bitmap );
 imageio_api void imageio_yuv444_to_rgb            ( uint32_t width, uint32_t height, uint32_t byte_count, uint8_t* bitmap );
 
+imageio_api const char* imageio_image_string  ( const image_t* img );
+
 
 #define rgba(r,g,b,a)	( (r) << 24 || (g) << 16 || (b) << 8 || (a) ) // 4 bytes
 #define r32(color)		( ((color) & 0xFF000000) >> 24 )

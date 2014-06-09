@@ -58,7 +58,7 @@ int main( int argc, char *argv[] )
 	{
 		if( strncmp( argv[ c ], "-f", 2 ) == 0 )
 		{
-			imageio_image_load( &image, argv[ c + 1], PNG );
+			imageio_load( &image, argv[ c + 1] );
 
 			printf( "Loaded: %s\n", argv[ c + 1 ] );
 			printf( "%d x %d @ %dbpp\n", image.width, image.height, image.bits_per_pixel );
