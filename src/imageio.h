@@ -115,10 +115,10 @@ imageio_api void imageio_flip_horizontally        ( uint32_t width, uint32_t hei
 imageio_api void imageio_flip_vertically          ( uint32_t width, uint32_t height, uint32_t byte_count, uint8_t* bitmap );
 imageio_api void imageio_flip_horizontally_nocopy ( uint32_t width, uint32_t height, const uint8_t* src_bitmap, uint8_t* dst_bitmap, uint32_t byte_count );
 imageio_api void imageio_flip_vertically_nocopy   ( uint32_t width, uint32_t height, const uint8_t* src_bitmap, uint8_t* dst_bitmap, uint32_t byte_count );
-imageio_api void imageio_detect_edges             ( uint32_t width, uint32_t height, uint32_t bits_per_pixel, const uint8_t* src_bitmap, uint8_t* dst_bitmap, uint32_t k );
-imageio_api void imageio_extract_color            ( uint32_t width, uint32_t height, uint32_t bits_per_pixel, const uint8_t* src_bitmap, uint8_t* dst_bitmap, uint32_t color, uint32_t k );
-imageio_api void imageio_convert_to_grayscale     ( uint32_t width, uint32_t height, uint32_t bits_per_pixel, const uint8_t* src_bitmap, uint8_t* dst_bitmap );
-imageio_api void imageio_convert_to_colorscale    ( uint32_t width, uint32_t height, uint32_t bits_per_pixel, const uint8_t* src_bitmap, uint8_t* dst_bitmap, uint32_t color );
+imageio_api bool imageio_detect_edges             ( uint32_t width, uint32_t height, uint32_t bits_per_pixel, const uint8_t* src_bitmap, uint8_t* dst_bitmap, uint32_t k );
+imageio_api bool imageio_extract_color            ( uint32_t width, uint32_t height, uint32_t bits_per_pixel, const uint8_t* src_bitmap, uint8_t* dst_bitmap, uint32_t color, uint32_t k );
+imageio_api bool imageio_convert_to_grayscale     ( uint32_t width, uint32_t height, uint32_t bits_per_pixel, const uint8_t* src_bitmap, uint8_t* dst_bitmap );
+imageio_api bool imageio_convert_to_colorscale    ( uint32_t width, uint32_t height, uint32_t bits_per_pixel, const uint8_t* src_bitmap, uint8_t* dst_bitmap, uint32_t color );
 imageio_api void imageio_modify_contrast          ( uint32_t width, uint32_t height, uint32_t bits_per_pixel, const uint8_t* src_bitmap, uint8_t* dst_bitmap, int contrast );
 imageio_api void imageio_modify_brightness        ( uint32_t width, uint32_t height, uint32_t bits_per_pixel, const uint8_t* src_bitmap, uint8_t* dst_bitmap, int brightness );
 imageio_api void imageio_rgb_to_yuv444            ( uint32_t width, uint32_t height, uint32_t byte_count, uint8_t* bitmap );

@@ -143,13 +143,13 @@ static __inline bool imageio_pvr_load    ( const char* filename, pvr_header_t* p
 static __inline bool imageio_png_load ( const char* filename, image_t* image );
 static __inline bool imageio_png_save ( const char* filename, const image_t* image );
 
-static __inline void imageio_resize_nearest_neighbor      ( uint32_t src_width, uint32_t src_height, uint32_t srcBitsPerPixel, const uint8_t* src_bitmap, uint32_t dst_width, uint32_t dst_height, uint32_t dstBitsPerPixel, uint8_t* dst_bitmap );
-static __inline void imageio_resize_bilinear_rgba         ( uint32_t src_width, uint32_t src_height, const uint8_t* src_bitmap, uint32_t dst_width, uint32_t dst_height, uint8_t* dst_bitmap, uint32_t byte_count );
-static __inline void imageio_resize_bilinear_sharper_rgba ( uint32_t src_width, uint32_t src_height, const uint8_t* src_bitmap, uint32_t dst_width, uint32_t dst_height, uint8_t* dst_bitmap, uint32_t byte_count );
-static __inline void imageio_resize_bilinear_rgb          ( uint32_t src_width, uint32_t src_height, const uint8_t* src_bitmap, uint32_t dst_width, uint32_t dst_height, uint8_t* dst_bitmap, uint32_t byte_count );
-static __inline void imageio_resize_bilinear_sharper_rgb  ( uint32_t src_width, uint32_t src_height, const uint8_t* src_bitmap, uint32_t dst_width, uint32_t dst_height, uint8_t* dst_bitmap, uint32_t byte_count );
-static __inline void imageio_resize_bicubic_rgba          ( uint32_t src_width, uint32_t src_height, const uint8_t* src_bitmap, uint32_t dst_width, uint32_t dst_height, uint8_t* dst_bitmap, uint32_t byte_count );
-static __inline void imageio_resize_bicubic_rgb           ( uint32_t src_width, uint32_t src_height, const uint8_t* src_bitmap, uint32_t dst_width, uint32_t dst_height, uint8_t* dst_bitmap, uint32_t byte_count );
+static __inline bool imageio_resize_nearest_neighbor      ( uint32_t src_width, uint32_t src_height, uint32_t srcBitsPerPixel, const uint8_t* src_bitmap, uint32_t dst_width, uint32_t dst_height, uint32_t dstBitsPerPixel, uint8_t* dst_bitmap );
+static __inline bool imageio_resize_bilinear_rgba         ( uint32_t src_width, uint32_t src_height, const uint8_t* src_bitmap, uint32_t dst_width, uint32_t dst_height, uint8_t* dst_bitmap, uint32_t byte_count );
+static __inline bool imageio_resize_bilinear_sharper_rgba ( uint32_t src_width, uint32_t src_height, const uint8_t* src_bitmap, uint32_t dst_width, uint32_t dst_height, uint8_t* dst_bitmap, uint32_t byte_count );
+static __inline bool imageio_resize_bilinear_rgb          ( uint32_t src_width, uint32_t src_height, const uint8_t* src_bitmap, uint32_t dst_width, uint32_t dst_height, uint8_t* dst_bitmap, uint32_t byte_count );
+static __inline bool imageio_resize_bilinear_sharper_rgb  ( uint32_t src_width, uint32_t src_height, const uint8_t* src_bitmap, uint32_t dst_width, uint32_t dst_height, uint8_t* dst_bitmap, uint32_t byte_count );
+static __inline bool imageio_resize_bicubic_rgba          ( uint32_t src_width, uint32_t src_height, const uint8_t* src_bitmap, uint32_t dst_width, uint32_t dst_height, uint8_t* dst_bitmap, uint32_t byte_count );
+static __inline bool imageio_resize_bicubic_rgb           ( uint32_t src_width, uint32_t src_height, const uint8_t* src_bitmap, uint32_t dst_width, uint32_t dst_height, uint8_t* dst_bitmap, uint32_t byte_count );
 
 static __inline bool is_power_of_2( uint16_t x )
 {
@@ -795,10 +795,6 @@ bool imageio_png_save( const char* filename, const image_t* image )
 	return true;
 }
 
-
-
-
-
 /*
  *  Image stretching functions...
  */
@@ -875,7 +871,7 @@ void imageio_image_resize( uint32_t src_width, uint32_t src_height, const uint8_
 }
 
 /* uses nearest neighbor... */
-void imageio_resize_nearest_neighbor( uint32_t src_width, uint32_t src_height, uint32_t srcBitsPerPixel, const uint8_t* src_bitmap,
+bool imageio_resize_nearest_neighbor( uint32_t src_width, uint32_t src_height, uint32_t srcBitsPerPixel, const uint8_t* src_bitmap,
                                       uint32_t dst_width, uint32_t dst_height, uint32_t dstBitsPerPixel, uint8_t* dst_bitmap )
 {
 	uint32_t srcByteCount = srcBitsPerPixel >> 3;
@@ -892,6 +888,12 @@ void imageio_resize_nearest_neighbor( uint32_t src_width, uint32_t src_height, u
 	assert( srcBitsPerPixel != 0 || dstBitsPerPixel != 0 );
 	assert( src_bitmap != NULL || dst_bitmap != NULL );
 	assert( src_width != 0 || src_height != 0 );
+
+	if( !src_bitmap || !dst_bitmap || srcBitsPerPixel == 0 || dstBitsPerPixel == 0 || src_width == 0 || src_height == 0 )
+	{
+		return false;
+	}
+
 	horizontalStretchFactor = (float) src_width / (float) dst_width;
 	verticalStretchFactor = (float) src_height / (float) dst_height;
 
@@ -912,12 +914,11 @@ void imageio_resize_nearest_neighbor( uint32_t src_width, uint32_t src_height, u
 		}
 	}
 
+	return true;
 }
 
-
-
 /* bi-linear: nearest neighbor with bilinear interpolation */
-void imageio_resize_bilinear_rgba( uint32_t src_width, uint32_t src_height, const uint8_t* src_bitmap,
+bool imageio_resize_bilinear_rgba( uint32_t src_width, uint32_t src_height, const uint8_t* src_bitmap,
                                    uint32_t dst_width, uint32_t dst_height, uint8_t* dst_bitmap,
                                    uint32_t byte_count )
 {
@@ -939,6 +940,12 @@ void imageio_resize_bilinear_rgba( uint32_t src_width, uint32_t src_height, cons
 	uint32_t largestSrcIndex = src_width * src_height * byte_count;
 
 	assert( byte_count == 4 );
+
+	if( !src_bitmap || !dst_bitmap || byte_count != 4 )
+	{
+		return false;
+	}
+
 
 	horizontalStretchFactor = (float) src_width / (float) dst_width;  /* stretch vector */
 	verticalStretchFactor = (float) src_height / (float) dst_height;
@@ -992,9 +999,11 @@ void imageio_resize_bilinear_rgba( uint32_t src_width, uint32_t src_height, cons
 			dst_bitmap[ dstPos + 3 ] = (uint8_t) bilerp( 0.5, 0.5, n4A, n3A, n2A, n1A );
 		}
 	}
+
+	return true;
 }
 
-void imageio_resize_bilinear_sharper_rgba( uint32_t src_width, uint32_t src_height, const uint8_t* src_bitmap,
+bool imageio_resize_bilinear_sharper_rgba( uint32_t src_width, uint32_t src_height, const uint8_t* src_bitmap,
 									uint32_t dst_width, uint32_t dst_height, uint8_t* dst_bitmap,
 									uint32_t byte_count )
 {
@@ -1018,10 +1027,13 @@ void imageio_resize_bilinear_sharper_rgba( uint32_t src_width, uint32_t src_heig
 
 	assert( byte_count == 4 );
 
+	if( !src_bitmap || !dst_bitmap || byte_count != 4 )
+	{
+		return false;
+	}
+
 	horizontalStretchFactor = (float) src_width / (float) dst_width;  /* stretch vector */
 	verticalStretchFactor = (float) src_height / (float) dst_height;
-
-
 
 	for( y = 0; y < dst_height; y++ )
 	{
@@ -1087,9 +1099,11 @@ void imageio_resize_bilinear_sharper_rgba( uint32_t src_width, uint32_t src_heig
 			dst_bitmap[ dstPos + 3 ] = (uint8_t) lerp( 0.5, bilerp( 0.5, 0.5, n4A, n3A, n2A, n1A ), A );
 		}
 	}
+
+	return true;
 }
 
-void imageio_resize_bilinear_rgb( uint32_t src_width, uint32_t src_height, const uint8_t* src_bitmap,
+bool imageio_resize_bilinear_rgb( uint32_t src_width, uint32_t src_height, const uint8_t* src_bitmap,
 				  uint32_t dst_width, uint32_t dst_height, uint8_t* dst_bitmap,
 				  uint32_t byte_count )
 {
@@ -1110,6 +1124,11 @@ void imageio_resize_bilinear_rgb( uint32_t src_width, uint32_t src_height, const
                   n4R, n4G, n4B;
 
 	assert( byte_count == 3 );
+
+	if( !src_bitmap || !dst_bitmap || byte_count != 3 )
+	{
+		return false;
+	}
 
 	horizontalStretchFactor = (float) src_width / (float) dst_width;  /* stretch vector */
 	verticalStretchFactor = (float) src_height / (float) dst_height;
@@ -1155,10 +1174,12 @@ void imageio_resize_bilinear_rgb( uint32_t src_width, uint32_t src_height, const
 			dst_bitmap[ dstPos + 2 ] = (uint8_t) bilerp( 0.5, 0.5, n4B, n3B, n2B, n1B );
 		}
 	}
+
+	return true;
 }
 
 
-void imageio_resize_bilinear_sharper_rgb( uint32_t src_width, uint32_t src_height, const uint8_t* src_bitmap,
+bool imageio_resize_bilinear_sharper_rgb( uint32_t src_width, uint32_t src_height, const uint8_t* src_bitmap,
 								   uint32_t dst_width, uint32_t dst_height, uint8_t* dst_bitmap,
 								   uint32_t byte_count )
 {
@@ -1181,6 +1202,11 @@ void imageio_resize_bilinear_sharper_rgb( uint32_t src_width, uint32_t src_heigh
 	uint32_t largestSrcIndex = src_width * src_height * byte_count;
 
 	assert( byte_count == 3 );
+
+	if( !src_bitmap || !dst_bitmap || byte_count != 3 )
+	{
+		return false;
+	}
 
 	horizontalStretchFactor = (float) src_width / (float) dst_width;  /* stretch vector */
 	verticalStretchFactor   = (float) src_height / (float) dst_height;
@@ -1243,12 +1269,14 @@ void imageio_resize_bilinear_sharper_rgb( uint32_t src_width, uint32_t src_heigh
 			dst_bitmap[ dstPos + 2 ] = (uint8_t) lerp( 0.5, bilerp( 0.5, 0.5, n4B, n3B, n2B, n1B ), B );
 		}
 	}
+
+	return true;
 }
 
 #define P(x)	( (x) > 0 ? (x) : 0 )
 #define R(x)	( (1.0/6) * (P((x)+2) * P((x)+2) * P((x)+2) - 4.0 * P((x)+1) * P((x)+1) * P((x)+1) + 6.0 * P((x)) * P((x)) * P(x) - 4.0 * P((x)-1) * P((x)-1) * P((x)-1)) )
 
-void imageio_resize_bicubic_rgba( uint32_t src_width, uint32_t src_height, const uint8_t* src_bitmap,
+bool imageio_resize_bicubic_rgba( uint32_t src_width, uint32_t src_height, const uint8_t* src_bitmap,
 							 uint32_t dst_width, uint32_t dst_height, uint8_t* dst_bitmap,
 							 uint32_t byte_count )
 {
@@ -1270,10 +1298,13 @@ void imageio_resize_bicubic_rgba( uint32_t src_width, uint32_t src_height, const
 
 	assert( byte_count == 4 );
 
+	if( !src_bitmap || !dst_bitmap || byte_count != 4 )
+	{
+		return false;
+	}
+
 	horizontalStretchFactor = (float) src_width / (float) dst_width;  /* stretch vector */
 	verticalStretchFactor = (float) src_height / (float) dst_height;
-
-
 
 	for( y = 0; y < dst_height; y++ )
 	{
@@ -1313,9 +1344,11 @@ void imageio_resize_bicubic_rgba( uint32_t src_width, uint32_t src_height, const
 			dst_bitmap[ dstPos + 3 ] = (uint8_t) sumA;
 		}
 	}
+
+	return true;
 }
 
-void imageio_resize_bicubic_rgb( uint32_t src_width, uint32_t src_height, const uint8_t* src_bitmap,
+bool imageio_resize_bicubic_rgb( uint32_t src_width, uint32_t src_height, const uint8_t* src_bitmap,
 							uint32_t dst_width, uint32_t dst_height, uint8_t* dst_bitmap,
 							uint32_t byte_count )
 {
@@ -1335,10 +1368,13 @@ void imageio_resize_bicubic_rgb( uint32_t src_width, uint32_t src_height, const 
 	register uint32_t sumB = 0;
 	assert( byte_count == 4 );
 
+	if( !src_bitmap || !dst_bitmap || byte_count != 4 )
+	{
+		return false;
+	}
+
 	horizontalStretchFactor = (float) src_width / (float) dst_width;  /* stretch vector */
 	verticalStretchFactor = (float) src_height / (float) dst_height;
-
-
 
 	for( y = 0; y < dst_height; y++ )
 	{
@@ -1377,6 +1413,8 @@ void imageio_resize_bicubic_rgb( uint32_t src_width, uint32_t src_height, const 
 			dst_bitmap[ dstPos + 2 ] = (uint8_t) sumB;
 		}
 	}
+
+	return true;
 }
 
 bool imageio_blit( uint32_t pos_x, uint32_t pos_y,
@@ -1522,7 +1560,7 @@ void imageio_flip_vertically_nocopy( uint32_t width, uint32_t height, const uint
 /*
  * Edge Detection: k is the maximum color distance that signifies an edge
  */
-void imageio_detect_edges( uint32_t width, uint32_t height, uint32_t bits_per_pixel, const uint8_t* src_bitmap, uint8_t* dst_bitmap, uint32_t k )
+bool imageio_detect_edges( uint32_t width, uint32_t height, uint32_t bits_per_pixel, const uint8_t* src_bitmap, uint8_t* dst_bitmap, uint32_t k )
 {
 	uint32_t byte_count = bits_per_pixel >> 3; /* 4 ==> RGBA32, 3==>RGB32 , 2 ==> RGB16 */
 	register uint32_t y;
@@ -1530,7 +1568,13 @@ void imageio_detect_edges( uint32_t width, uint32_t height, uint32_t bits_per_pi
 	assert( bits_per_pixel != 0 );
 	assert( src_bitmap != NULL || dst_bitmap != NULL );
 
+	if( !src_bitmap || !dst_bitmap || bits_per_pixel == 0 )
+	{
+		return false;
+	}
+
 	for( y = 0; y < height - 1; y++ )
+	{
 		for( x = 0; x < width - 1; x++ )
 		{
 			/* r = right, b = bottom */
@@ -1566,19 +1610,22 @@ void imageio_detect_edges( uint32_t width, uint32_t height, uint32_t bits_per_pi
 				dst_bitmap[ pos + 1 ] = 0xFF;
 				dst_bitmap[ pos + 2 ] = 0xFF;
 			}
-			else { /* otherwise place a black pixel; */
+			else /* otherwise place a black pixel; */
+			{
 				dst_bitmap[ pos + 0 ] = 0x00;
 				dst_bitmap[ pos + 1 ] = 0x00;
 				dst_bitmap[ pos + 2 ] = 0x00;
 			}
-
 		}
+	}
+
+	return true;
 }
 
 /*
  * Color Extraction: Marks white all the pixels that are no greater than k distance to the color.
  */
-void imageio_extract_color( uint32_t width, uint32_t height, uint32_t bits_per_pixel, const uint8_t* src_bitmap, uint8_t* dst_bitmap, uint32_t color, uint32_t k )
+bool imageio_extract_color( uint32_t width, uint32_t height, uint32_t bits_per_pixel, const uint8_t* src_bitmap, uint8_t* dst_bitmap, uint32_t color, uint32_t k )
 {
 	uint32_t byte_count = bits_per_pixel >> 3; /* 4 ==> RGBA32, 3==>RGB32 , 2 ==> RGB16 */
 	register uint32_t y;
@@ -1586,7 +1633,13 @@ void imageio_extract_color( uint32_t width, uint32_t height, uint32_t bits_per_p
 	assert( bits_per_pixel != 0 );
 	assert( src_bitmap != NULL || dst_bitmap != NULL );
 
+	if( !src_bitmap || !dst_bitmap || bits_per_pixel == 0 )
+	{
+		return false;
+	}
+
 	for( y = 0; y < height; y++ )
+	{
 		for( x = 0; x < width; x++ )
 		{
 			uint32_t pos = width * y * byte_count + x * byte_count;
@@ -1607,12 +1660,15 @@ void imageio_extract_color( uint32_t width, uint32_t height, uint32_t bits_per_p
 				dst_bitmap[ pos + 2 ] = 0x00;
 			}
 		}
+	}
+
+	return true;
 }
 
 /*
  * Grayscale conversion
  */
-void imageio_convert_to_grayscale( uint32_t width, uint32_t height, uint32_t bits_per_pixel, const uint8_t* src_bitmap, uint8_t* dst_bitmap )
+bool imageio_convert_to_grayscale( uint32_t width, uint32_t height, uint32_t bits_per_pixel, const uint8_t* src_bitmap, uint8_t* dst_bitmap )
 {
 	uint32_t byte_count = bits_per_pixel >> 3; /* 4 ==> RGBA32, 3==>RGB32 , 2 ==> RGB16 */
 	register uint32_t y;
@@ -1620,7 +1676,13 @@ void imageio_convert_to_grayscale( uint32_t width, uint32_t height, uint32_t bit
 	assert( bits_per_pixel != 0 );
 	assert( src_bitmap != NULL || dst_bitmap != NULL );
 
+	if( !src_bitmap || !dst_bitmap || bits_per_pixel == 0 )
+	{
+		return false;
+	}
+
 	for( y = 0; y < height; y++ )
+	{
 		for( x = 0; x < width; x++ )
 		{
 			uint32_t pos = width * y * byte_count + x * byte_count;
@@ -1635,12 +1697,15 @@ void imageio_convert_to_grayscale( uint32_t width, uint32_t height, uint32_t bit
 			dst_bitmap[ pos + 1 ] = colorAverage;
 			dst_bitmap[ pos + 2 ] = colorAverage;
 		}
+	}
+
+	return true;
 }
 
 /*
  * Colorscale conversion
  */
-void imageio_convert_to_colorscale( uint32_t width, uint32_t height, uint32_t bits_per_pixel, const uint8_t* src_bitmap, uint8_t* dst_bitmap, uint32_t color )
+bool imageio_convert_to_colorscale( uint32_t width, uint32_t height, uint32_t bits_per_pixel, const uint8_t* src_bitmap, uint8_t* dst_bitmap, uint32_t color )
 {
 	uint32_t byte_count = bits_per_pixel >> 3; /* 4 ==> RGBA32, 3==>RGB32 , 2 ==> RGB16 */
 	register uint32_t y;
@@ -1648,12 +1713,22 @@ void imageio_convert_to_colorscale( uint32_t width, uint32_t height, uint32_t bi
 	uint8_t r = r32(color);
 	uint8_t g = g32(color);
 	uint8_t b = b32(color);
-	assert( (r != 0 && g != 0 && b != 0) ||
-			(r != 0 || g != 0 || b != 0) ); /* no black, because 0 vector */
 	assert( src_bitmap != NULL || dst_bitmap != NULL );
 	assert( bits_per_pixel != 0 );
 
+	if( !src_bitmap || !dst_bitmap || bits_per_pixel == 0 )
+	{
+		return false;
+	}
+
+	if( r == 0 && g == 0 && b == 0 )
+	{
+		/* no black, because 0 vector */
+		return false;
+	}
+
 	for( y = 0; y < height; y++ )
+	{
 		for( x = 0; x < width; x++ )
 		{
 			uint32_t pos = width * y * byte_count + x * byte_count;
@@ -1668,6 +1743,9 @@ void imageio_convert_to_colorscale( uint32_t width, uint32_t height, uint32_t bi
 			dst_bitmap[ pos + 1 ] = (uint8_t) colorScaled * G;
 			dst_bitmap[ pos + 2 ] = (uint8_t) colorScaled * B;
 		}
+	}
+
+	return true;
 }
 
 /*
