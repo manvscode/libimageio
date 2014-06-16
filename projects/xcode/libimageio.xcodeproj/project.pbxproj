@@ -10,32 +10,18 @@
 		087C8268180D80AF003D5A59 /* blending.h in Headers */ = {isa = PBXBuildFile; fileRef = 087C8265180D80AF003D5A59 /* blending.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		087C8269180D80AF003D5A59 /* imageio.c in Sources */ = {isa = PBXBuildFile; fileRef = 087C8266180D80AF003D5A59 /* imageio.c */; };
 		087C826A180D80AF003D5A59 /* imageio.h in Headers */ = {isa = PBXBuildFile; fileRef = 087C8267180D80AF003D5A59 /* imageio.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		08F9B717180DC8EC00DC30C4 /* libpng.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 087C8270180D80D4003D5A59 /* libpng.a */; };
+		D82B50C5194E002B00EF5CE4 /* imageio.c in Sources */ = {isa = PBXBuildFile; fileRef = 087C8266180D80AF003D5A59 /* imageio.c */; };
+		D82B50C8194E002B00EF5CE4 /* imageio.h in Headers */ = {isa = PBXBuildFile; fileRef = 087C8267180D80AF003D5A59 /* imageio.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D82B50C9194E002B00EF5CE4 /* blending.h in Headers */ = {isa = PBXBuildFile; fileRef = 087C8265180D80AF003D5A59 /* blending.h */; settings = {ATTRIBUTES = (Public, ); }; };
 /* End PBXBuildFile section */
-
-/* Begin PBXContainerItemProxy section */
-		087C826F180D80D4003D5A59 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 087C826B180D80D4003D5A59 /* libpng.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 087C8218180D7F5D003D5A59;
-			remoteInfo = libpng;
-		};
-		08C28487180DD1ED00E96BF5 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 087C826B180D80D4003D5A59 /* libpng.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 087C8217180D7F5D003D5A59;
-			remoteInfo = libpng;
-		};
-/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		087C825D180D8072003D5A59 /* libimageio.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libimageio.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		087C8265180D80AF003D5A59 /* blending.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = blending.h; path = ../../src/blending.h; sourceTree = "<group>"; };
 		087C8266180D80AF003D5A59 /* imageio.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = imageio.c; path = ../../src/imageio.c; sourceTree = "<group>"; };
 		087C8267180D80AF003D5A59 /* imageio.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = imageio.h; path = ../../src/imageio.h; sourceTree = "<group>"; };
-		087C826B180D80D4003D5A59 /* libpng.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = libpng.xcodeproj; path = "../../../libpng-1.6.6/projects/xcode/libpng.xcodeproj"; sourceTree = "<group>"; };
+		D82B50C1194DFF4E00EF5CE4 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
+		D82B50CD194E002B00EF5CE4 /* libimageio.dylib */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libimageio.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -43,7 +29,13 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				08F9B717180DC8EC00DC30C4 /* libpng.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D82B50C6194E002B00EF5CE4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -53,7 +45,7 @@
 		087C8254180D8072003D5A59 = {
 			isa = PBXGroup;
 			children = (
-				087C826B180D80D4003D5A59 /* libpng.xcodeproj */,
+				D82B50C1194DFF4E00EF5CE4 /* libz.dylib */,
 				087C8264180D809B003D5A59 /* src */,
 				087C825E180D8072003D5A59 /* Products */,
 			);
@@ -63,6 +55,7 @@
 			isa = PBXGroup;
 			children = (
 				087C825D180D8072003D5A59 /* libimageio.a */,
+				D82B50CD194E002B00EF5CE4 /* libimageio.dylib */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -77,14 +70,6 @@
 			name = src;
 			sourceTree = "<group>";
 		};
-		087C826C180D80D4003D5A59 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				087C8270180D80D4003D5A59 /* libpng.a */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -97,12 +82,21 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		D82B50C7194E002B00EF5CE4 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D82B50C8194E002B00EF5CE4 /* imageio.h in Headers */,
+				D82B50C9194E002B00EF5CE4 /* blending.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		087C825C180D8072003D5A59 /* libimageio */ = {
+		087C825C180D8072003D5A59 /* libimageio-static */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 087C8261180D8072003D5A59 /* Build configuration list for PBXNativeTarget "libimageio" */;
+			buildConfigurationList = 087C8261180D8072003D5A59 /* Build configuration list for PBXNativeTarget "libimageio-static" */;
 			buildPhases = (
 				087C8259180D8072003D5A59 /* Sources */,
 				087C825A180D8072003D5A59 /* Frameworks */,
@@ -111,11 +105,27 @@
 			buildRules = (
 			);
 			dependencies = (
-				08C28488180DD1ED00E96BF5 /* PBXTargetDependency */,
 			);
-			name = libimageio;
+			name = "libimageio-static";
 			productName = libimageio;
 			productReference = 087C825D180D8072003D5A59 /* libimageio.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		D82B50C3194E002B00EF5CE4 /* libimageio-shared */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D82B50CA194E002B00EF5CE4 /* Build configuration list for PBXNativeTarget "libimageio-shared" */;
+			buildPhases = (
+				D82B50C4194E002B00EF5CE4 /* Sources */,
+				D82B50C6194E002B00EF5CE4 /* Frameworks */,
+				D82B50C7194E002B00EF5CE4 /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "libimageio-shared";
+			productName = libimageio;
+			productReference = D82B50CD194E002B00EF5CE4 /* libimageio.dylib */;
 			productType = "com.apple.product-type.library.static";
 		};
 /* End PBXNativeTarget section */
@@ -124,7 +134,7 @@
 		087C8255180D8072003D5A59 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0500;
+				LastUpgradeCheck = 0600;
 				ORGANIZATIONNAME = "Joe Marrero";
 			};
 			buildConfigurationList = 087C8258180D8072003D5A59 /* Build configuration list for PBXProject "libimageio" */;
@@ -137,28 +147,13 @@
 			mainGroup = 087C8254180D8072003D5A59;
 			productRefGroup = 087C825E180D8072003D5A59 /* Products */;
 			projectDirPath = "";
-			projectReferences = (
-				{
-					ProductGroup = 087C826C180D80D4003D5A59 /* Products */;
-					ProjectRef = 087C826B180D80D4003D5A59 /* libpng.xcodeproj */;
-				},
-			);
 			projectRoot = "";
 			targets = (
-				087C825C180D8072003D5A59 /* libimageio */,
+				087C825C180D8072003D5A59 /* libimageio-static */,
+				D82B50C3194E002B00EF5CE4 /* libimageio-shared */,
 			);
 		};
 /* End PBXProject section */
-
-/* Begin PBXReferenceProxy section */
-		087C8270180D80D4003D5A59 /* libpng.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libpng.a;
-			remoteRef = 087C826F180D80D4003D5A59 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-/* End PBXReferenceProxy section */
 
 /* Begin PBXSourcesBuildPhase section */
 		087C8259180D8072003D5A59 /* Sources */ = {
@@ -169,15 +164,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-/* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		08C28488180DD1ED00E96BF5 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = libpng;
-			targetProxy = 08C28487180DD1ED00E96BF5 /* PBXContainerItemProxy */;
+		D82B50C4194E002B00EF5CE4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D82B50C5194E002B00EF5CE4 /* imageio.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
 		};
-/* End PBXTargetDependency section */
+/* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
 		087C825F180D8072003D5A59 /* Debug */ = {
@@ -210,6 +205,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				ONLY_ACTIVE_ARCH = YES;
 				PUBLIC_HEADERS_FOLDER_PATH = "include/$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -248,11 +244,17 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
+				CODE_SIGN_IDENTITY = "Mac Developer: Joseph Marrero (EJ27V32M7J)";
 				EXECUTABLE_PREFIX = "";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				PUBLIC_HEADERS_FOLDER_PATH = "include/$(TARGET_NAME)";
-				SDKROOT = iphoneos;
-				USER_HEADER_SEARCH_PATHS = "include/**";
+				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
+				GCC_WARN_PEDANTIC = YES;
+				LIBRARY_SEARCH_PATHS = /usr/local/lib;
+				OTHER_LDFLAGS = "-lpng";
+				PRODUCT_NAME = libimageio;
+				PUBLIC_HEADERS_FOLDER_PATH = "include/$(PRODUCT_NAME)";
+				SDKROOT = macosx;
+				USER_HEADER_SEARCH_PATHS = "include/** /usr/local/include";
 			};
 			name = Debug;
 		};
@@ -260,11 +262,57 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
+				CODE_SIGN_IDENTITY = "Mac Developer: Joseph Marrero (EJ27V32M7J)";
 				EXECUTABLE_PREFIX = "";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				PUBLIC_HEADERS_FOLDER_PATH = "include/$(TARGET_NAME)";
-				SDKROOT = iphoneos;
-				USER_HEADER_SEARCH_PATHS = "include/**";
+				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
+				GCC_WARN_PEDANTIC = YES;
+				LIBRARY_SEARCH_PATHS = /usr/local/lib;
+				OTHER_LDFLAGS = "-lpng";
+				PRODUCT_NAME = libimageio;
+				PUBLIC_HEADERS_FOLDER_PATH = "include/$(PRODUCT_NAME)";
+				SDKROOT = macosx;
+				USER_HEADER_SEARCH_PATHS = "include/** /usr/local/include";
+			};
+			name = Release;
+		};
+		D82B50CB194E002B00EF5CE4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = YES;
+				CODE_SIGN_IDENTITY = "";
+				EXECUTABLE_EXTENSION = dylib;
+				EXECUTABLE_PREFIX = "";
+				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
+				GCC_WARN_PEDANTIC = YES;
+				LIBRARY_SEARCH_PATHS = /usr/local/lib;
+				MACH_O_TYPE = mh_dylib;
+				OTHER_LDFLAGS = "-lpng";
+				PRODUCT_NAME = libimageio;
+				PUBLIC_HEADERS_FOLDER_PATH = "include/$(PRODUCT_NAME)";
+				SDKROOT = macosx;
+				USER_HEADER_SEARCH_PATHS = "include/** /usr/local/include";
+			};
+			name = Debug;
+		};
+		D82B50CC194E002B00EF5CE4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = YES;
+				CODE_SIGN_IDENTITY = "";
+				EXECUTABLE_EXTENSION = dylib;
+				EXECUTABLE_PREFIX = "";
+				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
+				GCC_WARN_PEDANTIC = YES;
+				LIBRARY_SEARCH_PATHS = /usr/local/lib;
+				MACH_O_TYPE = mh_dylib;
+				OTHER_LDFLAGS = "-lpng";
+				PRODUCT_NAME = libimageio;
+				PUBLIC_HEADERS_FOLDER_PATH = "include/$(PRODUCT_NAME)";
+				SDKROOT = macosx;
+				USER_HEADER_SEARCH_PATHS = "include/** /usr/local/include";
 			};
 			name = Release;
 		};
@@ -280,11 +328,20 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		087C8261180D8072003D5A59 /* Build configuration list for PBXNativeTarget "libimageio" */ = {
+		087C8261180D8072003D5A59 /* Build configuration list for PBXNativeTarget "libimageio-static" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				087C8262180D8072003D5A59 /* Debug */,
 				087C8263180D8072003D5A59 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D82B50CA194E002B00EF5CE4 /* Build configuration list for PBXNativeTarget "libimageio-shared" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D82B50CB194E002B00EF5CE4 /* Debug */,
+				D82B50CC194E002B00EF5CE4 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

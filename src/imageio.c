@@ -156,7 +156,7 @@ static __inline bool is_power_of_2( uint16_t x )
 	return (x & (x - 1)) == 0;
 }
 
-bool imageio_load( image_t* img, const char* filename )
+bool imageio_load( image_t* img, const char* filename, image_file_format_t* fmt )
 {
 	bool result = false;
 	const char* extension = strrchr( filename, '.' );
@@ -201,20 +201,13 @@ bool imageio_load( image_t* img, const char* filename )
 				   goto failure;
 			}
 		}
-		else if( format == IMAGEIO_PNG )
-		{
-			/* These pesky PNG files need to be flipped vertically to be
-			 * correctly oriented for OpenGL.
-			 */
-			imageio_flip_vertically( img->width, img->height, img->bits_per_pixel >> 3, img->pixels );
-		}
-		else if( format == IMAGEIO_BMP )
-		{
-			//imageio_flip_horizontally( img->width, img->height, img->bits_per_pixel >> 3, img->pixels );
-			//imageio_flip_vertically( img->width, img->height, img->bits_per_pixel >> 3, img->pixels );
-		}
 
 		result = true;
+	}
+
+	if( fmt )
+	{
+		*fmt = format;
 	}
 
 failure:
