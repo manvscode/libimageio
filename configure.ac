@@ -6,10 +6,8 @@ AM_SILENT_RULES([yes])
 
 AC_PROG_CC
 AC_PROG_CC_STDC
-AC_PROG_CXX
 AC_C_INLINE
 AC_HEADER_STDC
-
 
 AH_TOP([
 #ifndef _LIBIMAGEIO_H_
@@ -29,16 +27,6 @@ CFLAGS="$CFLAGS -g -ggdb -O0"
 LDFLAGS="-lm -lpng $LDFLAGS"
 
 
-AM_PROG_AR
-LT_INIT([shared static])
-AC_PROG_LIBTOOL
-AM_PROG_LIBTOOL
-
-
-AC_CHECK_FUNCS([floor])
-AC_CHECK_FUNCS([memset])
-AC_CHECK_FUNCS([sqrt])
-AC_HEADER_STDBOOL
 
 AC_ARG_ENABLE([tests],
 	[AS_HELP_STRING([--disable-tests], [Enable test programs.])],
@@ -47,6 +35,11 @@ AC_ARG_ENABLE([tests],
 
 AM_CONDITIONAL([ENABLE_TESTS], [test "$enable_tests" = "yes"])
 
+AM_PROG_AR
+LT_INIT([shared static])
+
+AC_PROG_LIBTOOL
+AM_PROG_LIBTOOL
 
 AC_PROG_INSTALL
 
