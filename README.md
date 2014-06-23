@@ -9,7 +9,7 @@ Dependecies
 
 License
 =============
-    Copyright (C) 2012 Joseph A. Marrero.  http://www.manvscode.com/
+    Copyright (C) 2010-2014 Joseph A. Marrero.  http://www.manvscode.com/
     
     Permission is hereby granted, free of charge, to any person obtaining a copy
     of this software and associated documentation files (the "Software"), to deal
