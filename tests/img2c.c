@@ -52,7 +52,7 @@ int main( int argc, char* argv[] )
 	const char* output = NULL;
 	int opt;
 	int opt_idx;
-	uint8_t bits_per_pixel = 24;
+	uint8_t bits_per_pixel = 1;
 
 	while( (opt = getopt_long(argc, argv, "hi:o:b:", long_options, &opt_idx)) != -1 )
 	{
@@ -92,6 +92,7 @@ int main( int argc, char* argv[] )
 	}
 	else
 	{
+		imageio_flip_vertically_nocopy( image.width, image.height, image.pixels, image.pixels, image.channels );
 		output_source_code( &image, input, output, bits_per_pixel );
 	}
 
@@ -110,6 +111,7 @@ void help( void )
 		printf( "  -%c, --%-12s %-s\n", 'h', "help",       "Get help on how to use this program." );
 		printf( "  -%c, --%-12s %-s\n", 'i', "input",      "The input image filename." );
 		printf( "  -%c, --%-12s %-s\n", 'o', "output",     "The output C source filename." );
+		printf( "  -%c, --%-12s %-s\n", 'b', "bpp",        "The output bits per pixel." );
 	}
 
 	printf( "----------------------------------------------------\n" );
@@ -118,9 +120,12 @@ void help( void )
 
 void output_source_code( const image_t* image, const char* input, const char* output, uint8_t bits_per_pixel )
 {
+	//uint8_t channels = bits_per_pixel > 1 ? (bits_per_pixel >> 3) : 1;
 	uint8_t channels = bits_per_pixel >> 3;
 
 	FILE* ofile = fopen( output, "w" );
+
+	printf( "image = %s\n", imageio_image_string(image) );
 
 	if( ofile )
 	{
@@ -145,19 +150,59 @@ void output_source_code( const image_t* image, const char* input, const char* ou
 		);
 
 		fprintf( ofile, "\t\"");
-		size_t size = image->width * image->height * image->channels;
 
-		for( size_t i = 0; i < size; i += image->channels )
+		printf( "bits_per_pixel = %d\n", bits_per_pixel );
+		if( bits_per_pixel == 1 )
 		{
-			for( size_t j = 0; j < channels; j++ )
-			{
-				size_t index = i + j;
+			size_t size = image->width * image->height * image->channels;
 
-				if( index != 0 && (index % (channels * image->width) == 0) )
+			unsigned char byte = 0;
+			size_t pixel = 0;
+
+			for( size_t i = 0; i < size; i += image->channels )
+			{
+				if( pixel != 0 && (pixel % 64) == 0 )
 				{
 					fprintf( ofile, "\"\n\t\"" );
 				}
-				fprintf( ofile, "\\x%02x", image->pixels[ index ] );
+
+				float sum = 0.0f;
+				for( size_t j = 0; j < image->channels; j++ )
+				{
+					sum += image->pixels[ i + j ];
+				}
+				sum /= image->channels;
+
+				int bit = pixel % 8;
+				byte |= (sum > 0.0f ? (1 << (7 - bit)) : 0);
+
+				if( bit == 7 )
+				{
+					fprintf( ofile, "\\x%02x", byte );
+					byte = 0;
+				}
+				pixel++;
+			}
+		}
+		else
+		{
+			printf( "channels = %d\n", channels );
+			size_t size = image->width * image->height * image->channels;
+			size_t pixel = 0;
+
+			for( size_t i = 0; i < size; i += image->channels )
+			{
+				for( size_t j = 0; j < channels; j++ )
+				{
+					size_t index = i + j;
+
+					if( pixel != 0 && (pixel % (channels * image->width) == 0) )
+					{
+						fprintf( ofile, "\"\n\t\"" );
+					}
+					fprintf( ofile, "\\x%02x", image->pixels[ index ] );
+					pixel += 1;
+				}
 			}
 		}
 

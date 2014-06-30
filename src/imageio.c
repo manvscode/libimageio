@@ -1887,9 +1887,10 @@ void imageio_yuv444_to_rgb( uint32_t width, uint32_t height, uint32_t byte_count
 const char* imageio_image_string( const image_t* img )
 {
 	static char buffer[ 512 ];
-	snprintf( buffer, sizeof(buffer), "[image bpp=%02u channels=%u w=%05u h=%05u data=%02x%02x%02x%02x... ]",
+	snprintf( buffer, sizeof(buffer), "[image bpp=%02u channels=%u w=%05u h=%05u data=%02x%02x%02x%02x%02x%02x%02x%02x... ]",
 	          img->bits_per_pixel, img->channels, img->width, img->height,
-	          img->pixels[0], img->pixels[1], img->pixels[2], img->pixels[3] );
+	          img->pixels[0], img->pixels[1], img->pixels[2], img->pixels[3],
+	          img->pixels[4], img->pixels[5], img->pixels[6], img->pixels[7] );
 	buffer[ sizeof(buffer) - 1 ] = '\0';
 	return buffer;
 }
