@@ -10,18 +10,76 @@
 		087C8268180D80AF003D5A59 /* blending.h in Headers */ = {isa = PBXBuildFile; fileRef = 087C8265180D80AF003D5A59 /* blending.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		087C8269180D80AF003D5A59 /* imageio.c in Sources */ = {isa = PBXBuildFile; fileRef = 087C8266180D80AF003D5A59 /* imageio.c */; };
 		087C826A180D80AF003D5A59 /* imageio.h in Headers */ = {isa = PBXBuildFile; fileRef = 087C8267180D80AF003D5A59 /* imageio.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D828FED51969B811003F88B2 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D828FED41969B811003F88B2 /* libz.dylib */; };
 		D82B50C5194E002B00EF5CE4 /* imageio.c in Sources */ = {isa = PBXBuildFile; fileRef = 087C8266180D80AF003D5A59 /* imageio.c */; };
 		D82B50C8194E002B00EF5CE4 /* imageio.h in Headers */ = {isa = PBXBuildFile; fileRef = 087C8267180D80AF003D5A59 /* imageio.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D82B50C9194E002B00EF5CE4 /* blending.h in Headers */ = {isa = PBXBuildFile; fileRef = 087C8265180D80AF003D5A59 /* blending.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D842E61A196953A300224EC5 /* libpng.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D842E60E1969532B00224EC5 /* libpng.framework */; };
+		D842E626196954E100224EC5 /* libpng.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D842E6101969532B00224EC5 /* libpng.a */; };
+		D84A20151969B56B00DFCB31 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D82B50C1194DFF4E00EF5CE4 /* libz.dylib */; };
+		D84A20171969B57300DFCB31 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D82B50C1194DFF4E00EF5CE4 /* libz.dylib */; };
+		D8DFF6FE196938680035430B /* imageio.c in Sources */ = {isa = PBXBuildFile; fileRef = 087C8266180D80AF003D5A59 /* imageio.c */; };
+		D8DFF701196938680035430B /* imageio.h in Headers */ = {isa = PBXBuildFile; fileRef = 087C8267180D80AF003D5A59 /* imageio.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D8DFF702196938680035430B /* blending.h in Headers */ = {isa = PBXBuildFile; fileRef = 087C8265180D80AF003D5A59 /* blending.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D8F20AEC1969577F0072DE84 /* libpng.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D842E6121969532B00224EC5 /* libpng.a */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		D842E60D1969532B00224EC5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D842E6071969532A00224EC5 /* libpng.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 8D07F2C80486CC7A007CD1D0;
+			remoteInfo = "mac-libpng";
+		};
+		D842E60F1969532B00224EC5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D842E6071969532A00224EC5 /* libpng.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = A55DFB7815EBB44B007CCF00;
+			remoteInfo = "mac-static-libpng";
+		};
+		D842E6111969532B00224EC5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D842E6071969532A00224EC5 /* libpng.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = A5A58CFD17CF7FBE00B64330;
+			remoteInfo = "ios-static-libpng";
+		};
+		D842E6141969538100224EC5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D842E6071969532A00224EC5 /* libpng.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = A5A58CE517CF7FBE00B64330;
+			remoteInfo = "ios-static-libpng";
+		};
+		D842E6161969538D00224EC5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D842E6071969532A00224EC5 /* libpng.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = A55DFB7715EBB44B007CCF00;
+			remoteInfo = "mac-static-libpng";
+		};
+		D842E6181969539C00224EC5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D842E6071969532A00224EC5 /* libpng.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = A55DFB7715EBB44B007CCF00;
+			remoteInfo = "mac-static-libpng";
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		087C825D180D8072003D5A59 /* libimageio.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libimageio.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		087C8265180D80AF003D5A59 /* blending.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = blending.h; path = ../../src/blending.h; sourceTree = "<group>"; };
 		087C8266180D80AF003D5A59 /* imageio.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = imageio.c; path = ../../src/imageio.c; sourceTree = "<group>"; };
 		087C8267180D80AF003D5A59 /* imageio.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = imageio.h; path = ../../src/imageio.h; sourceTree = "<group>"; };
+		D828FED41969B811003F88B2 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.1.sdk/usr/lib/libz.dylib; sourceTree = DEVELOPER_DIR; };
 		D82B50C1194DFF4E00EF5CE4 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		D82B50CD194E002B00EF5CE4 /* libimageio.dylib */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libimageio.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		D842E6071969532A00224EC5 /* libpng.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = libpng.xcodeproj; path = "../../../libpng-1.6.12/projects/xcode/libpng.xcodeproj"; sourceTree = "<group>"; };
+		D84A20181969B57E00DFCB31 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS8.0.sdk/usr/lib/libz.dylib; sourceTree = DEVELOPER_DIR; };
+		D8DFF706196938680035430B /* libimageio.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libimageio.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -29,6 +87,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D84A20151969B56B00DFCB31 /* libz.dylib in Frameworks */,
+				D842E626196954E100224EC5 /* libpng.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -36,6 +96,17 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D84A20171969B57300DFCB31 /* libz.dylib in Frameworks */,
+				D842E61A196953A300224EC5 /* libpng.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D8DFF6FF196938680035430B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D828FED51969B811003F88B2 /* libz.dylib in Frameworks */,
+				D8F20AEC1969577F0072DE84 /* libpng.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -45,7 +116,10 @@
 		087C8254180D8072003D5A59 = {
 			isa = PBXGroup;
 			children = (
+				D828FED41969B811003F88B2 /* libz.dylib */,
+				D84A20181969B57E00DFCB31 /* libz.dylib */,
 				D82B50C1194DFF4E00EF5CE4 /* libz.dylib */,
+				D842E6071969532A00224EC5 /* libpng.xcodeproj */,
 				087C8264180D809B003D5A59 /* src */,
 				087C825E180D8072003D5A59 /* Products */,
 			);
@@ -56,6 +130,7 @@
 			children = (
 				087C825D180D8072003D5A59 /* libimageio.a */,
 				D82B50CD194E002B00EF5CE4 /* libimageio.dylib */,
+				D8DFF706196938680035430B /* libimageio.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -68,6 +143,16 @@
 				087C8267180D80AF003D5A59 /* imageio.h */,
 			);
 			name = src;
+			sourceTree = "<group>";
+		};
+		D842E6081969532A00224EC5 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D842E60E1969532B00224EC5 /* libpng.framework */,
+				D842E6101969532B00224EC5 /* libpng.a */,
+				D842E6121969532B00224EC5 /* libpng.a */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -91,6 +176,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		D8DFF700196938680035430B /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D8DFF701196938680035430B /* imageio.h in Headers */,
+				D8DFF702196938680035430B /* blending.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
@@ -105,6 +199,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				D842E6171969538D00224EC5 /* PBXTargetDependency */,
 			);
 			name = "libimageio-static";
 			productName = libimageio;
@@ -122,10 +217,29 @@
 			buildRules = (
 			);
 			dependencies = (
+				D842E6191969539C00224EC5 /* PBXTargetDependency */,
 			);
 			name = "libimageio-shared";
 			productName = libimageio;
 			productReference = D82B50CD194E002B00EF5CE4 /* libimageio.dylib */;
+			productType = "com.apple.product-type.library.static";
+		};
+		D8DFF6FC196938680035430B /* libimageio-ios */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D8DFF703196938680035430B /* Build configuration list for PBXNativeTarget "libimageio-ios" */;
+			buildPhases = (
+				D8DFF6FD196938680035430B /* Sources */,
+				D8DFF6FF196938680035430B /* Frameworks */,
+				D8DFF700196938680035430B /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D842E6151969538100224EC5 /* PBXTargetDependency */,
+			);
+			name = "libimageio-ios";
+			productName = libimageio;
+			productReference = D8DFF706196938680035430B /* libimageio.a */;
 			productType = "com.apple.product-type.library.static";
 		};
 /* End PBXNativeTarget section */
@@ -147,13 +261,44 @@
 			mainGroup = 087C8254180D8072003D5A59;
 			productRefGroup = 087C825E180D8072003D5A59 /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = D842E6081969532A00224EC5 /* Products */;
+					ProjectRef = D842E6071969532A00224EC5 /* libpng.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				087C825C180D8072003D5A59 /* libimageio-static */,
 				D82B50C3194E002B00EF5CE4 /* libimageio-shared */,
+				D8DFF6FC196938680035430B /* libimageio-ios */,
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		D842E60E1969532B00224EC5 /* libpng.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = libpng.framework;
+			remoteRef = D842E60D1969532B00224EC5 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		D842E6101969532B00224EC5 /* libpng.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libpng.a;
+			remoteRef = D842E60F1969532B00224EC5 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		D842E6121969532B00224EC5 /* libpng.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libpng.a;
+			remoteRef = D842E6111969532B00224EC5 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXSourcesBuildPhase section */
 		087C8259180D8072003D5A59 /* Sources */ = {
@@ -172,7 +317,33 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		D8DFF6FD196938680035430B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D8DFF6FE196938680035430B /* imageio.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		D842E6151969538100224EC5 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "ios-static-libpng";
+			targetProxy = D842E6141969538100224EC5 /* PBXContainerItemProxy */;
+		};
+		D842E6171969538D00224EC5 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "mac-static-libpng";
+			targetProxy = D842E6161969538D00224EC5 /* PBXContainerItemProxy */;
+		};
+		D842E6191969539C00224EC5 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "mac-static-libpng";
+			targetProxy = D842E6181969539C00224EC5 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		087C825F180D8072003D5A59 /* Debug */ = {
@@ -316,6 +487,42 @@
 			};
 			name = Release;
 		};
+		D8DFF704196938680035430B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = YES;
+				CODE_SIGN_IDENTITY = "Mac Developer: Joseph Marrero (EJ27V32M7J)";
+				EXECUTABLE_PREFIX = "";
+				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
+				GCC_WARN_PEDANTIC = YES;
+				LIBRARY_SEARCH_PATHS = /usr/local/lib;
+				OTHER_LDFLAGS = "-lpng";
+				PRODUCT_NAME = libimageio;
+				PUBLIC_HEADERS_FOLDER_PATH = "include/$(PRODUCT_NAME)";
+				SDKROOT = iphoneos;
+				USER_HEADER_SEARCH_PATHS = "include/** /usr/local/include";
+			};
+			name = Debug;
+		};
+		D8DFF705196938680035430B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = YES;
+				CODE_SIGN_IDENTITY = "Mac Developer: Joseph Marrero (EJ27V32M7J)";
+				EXECUTABLE_PREFIX = "";
+				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
+				GCC_WARN_PEDANTIC = YES;
+				LIBRARY_SEARCH_PATHS = /usr/local/lib;
+				OTHER_LDFLAGS = "-lpng";
+				PRODUCT_NAME = libimageio;
+				PUBLIC_HEADERS_FOLDER_PATH = "include/$(PRODUCT_NAME)";
+				SDKROOT = iphoneos;
+				USER_HEADER_SEARCH_PATHS = "include/** /usr/local/include";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -342,6 +549,15 @@
 			buildConfigurations = (
 				D82B50CB194E002B00EF5CE4 /* Debug */,
 				D82B50CC194E002B00EF5CE4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D8DFF703196938680035430B /* Build configuration list for PBXNativeTarget "libimageio-ios" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D8DFF704196938680035430B /* Debug */,
+				D8DFF705196938680035430B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
