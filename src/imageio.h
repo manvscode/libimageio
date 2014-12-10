@@ -101,7 +101,7 @@ imageio_api typedef struct imageio_image {
 
 imageio_api bool imageio_load          ( image_t* img, const char* filename, image_file_format_t* fmt );
 imageio_api bool imageio_image_load    ( image_t* img, const char* filename, image_file_format_t format );
-imageio_api bool imageio_image_save    ( image_t* img, const char* filename, image_file_format_t format );
+imageio_api bool imageio_image_save    ( const image_t* img, const char* filename, image_file_format_t format );
 imageio_api void imageio_image_destroy ( image_t* img );
 imageio_api void imageio_image_resize  ( uint32_t src_width, uint32_t src_height, const uint8_t* src_bitmap,
                                          uint32_t dst_width, uint32_t dst_height, uint8_t* dst_bitmap, uint32_t bits_per_pixel,

@@ -10,29 +10,29 @@
 	<string>libimageio</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
-		<key>F8B80AD9-ABCE-48E4-A3F8-4ACB0058E5C3</key>
+		<key>C85DDE47B6925D1203E244B30DEF6F4B4AD14AAA</key>
 		<string>https://bitbucket.org/manvscode/libimageio.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>projects/libimageio/libimageio.xcodeproj/project.xcworkspace</string>
+	<string>projects/xcode/libimageio.xcodeproj</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
-		<key>F8B80AD9-ABCE-48E4-A3F8-4ACB0058E5C3</key>
+		<key>C85DDE47B6925D1203E244B30DEF6F4B4AD14AAA</key>
 		<string>../../../..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
 	<string>https://bitbucket.org/manvscode/libimageio.git</string>
 	<key>IDESourceControlProjectVersion</key>
-	<integer>110</integer>
+	<integer>111</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
-	<string>F8B80AD9-ABCE-48E4-A3F8-4ACB0058E5C3</string>
+	<string>C85DDE47B6925D1203E244B30DEF6F4B4AD14AAA</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>F8B80AD9-ABCE-48E4-A3F8-4ACB0058E5C3</string>
+			<string>C85DDE47B6925D1203E244B30DEF6F4B4AD14AAA</string>
 			<key>IDESourceControlWCCName</key>
 			<string>libimageio</string>
 		</dict>

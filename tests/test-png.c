@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <err.h>
+#include <libutility/utility.h>
 #include "../src/imageio.h"
 
 
@@ -69,7 +70,17 @@ void png_save8( void )
 
 int main( int argc, char* argv[] )
 {
-	//png_save32( );
+	png_save32( );
 	png_save8( );
+
+	image_t image;
+
+	imageio_image_load( &image, "test-32bpp.png", IMAGEIO_PNG );
+
+ 	char* str = debug_buffer_to_string ( image.pixels, 4 * 10, 4, true );
+	printf( "First 10 pixels = %s\n", str );
+
+	free( str );
+
 	return 0;
 }

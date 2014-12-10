@@ -278,7 +278,7 @@ bool imageio_image_load( image_t* img, const char* filename, image_file_format_t
 	return result;
 }
 
-bool imageio_image_save( image_t* img, const char* filename, image_file_format_t format )
+bool imageio_image_save( const image_t* img, const char* filename, image_file_format_t format )
 {
 	bool result = false;
 
@@ -658,7 +658,7 @@ bool imageio_png_load( const char* filename, image_t* image )
     int i;
     for( i = 0; i < image->height; i++ )
     {
-        row_pointers[ i] = image->pixels + i * row_bytes;
+        row_pointers[ i ] = image->pixels + i * row_bytes;
     }
 
 	if( setjmp(png_jmpbuf(png_ptr)) )
@@ -769,7 +769,7 @@ bool imageio_png_save( const char* filename, const image_t* image )
     for( i = 0; i < image->height; i++ )
     {
         //row_pointers[ image->height - 1 - i] = image->pixels + i * row_bytes;
-        row_pointers[ i] = image->pixels + i * row_bytes;
+        row_pointers[ i ] = image->pixels + i * row_bytes;
     }
 
 	if( setjmp(png_jmpbuf(png_ptr)))
