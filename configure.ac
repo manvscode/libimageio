@@ -1,6 +1,6 @@
 AC_PREREQ(2.67)
 AC_INIT([libimageio], [0.6], [manvscode@manvscode.com], [libimageio], [http://www.manvscode.com/])
-AM_INIT_AUTOMAKE([1.13 foreign silent-rules -Wall -Werror])
+AM_INIT_AUTOMAKE([1.13 subdir-objects foreign silent-rules -Wall -Werror])
 
 AM_SILENT_RULES([yes])
 
@@ -22,9 +22,9 @@ AC_C_BIGENDIAN
 
 #DFLAGS="-D DEBUG"
 
-#CFLAGS="-Wall -pedantic -g -ggdb -O0 $DFLAGS -I/usr/local/include -I/opt/X11/include/libpng15 -L/opt/X11/lib $CFLAGS"
-CFLAGS="$CFLAGS -g -ggdb -O0"
-LDFLAGS="-lm -lpng $LDFLAGS"
+#CFLAGS="$CFLAGS -g -ggdb -O0"
+CFLAGS="$CFLAGS -O2"
+LDFLAGS="-lm $LDFLAGS"
 
 
 

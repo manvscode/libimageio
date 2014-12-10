@@ -70,17 +70,19 @@ void png_save8( void )
 
 int main( int argc, char* argv[] )
 {
-	png_save32( );
-	png_save8( );
+	//png_save32( );
+	//png_save8( );
 
-	image_t image;
+	if( argc > 1 )
+	{
+		image_t image;
+		imageio_image_load( &image, argv[1], IMAGEIO_PNG );
 
-	imageio_image_load( &image, "test-32bpp.png", IMAGEIO_PNG );
+		char* str = debug_buffer_to_string ( image.pixels, 4 * 10, 4, true );
+		printf( "First 10 pixels = %s\n", str );
 
- 	char* str = debug_buffer_to_string ( image.pixels, 4 * 10, 4, true );
-	printf( "First 10 pixels = %s\n", str );
-
-	free( str );
+		free( str );
+	}
 
 	return 0;
 }

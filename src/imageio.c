@@ -26,6 +26,7 @@
 #include <assert.h>
 #include <png.h>
 #include "imageio.h"
+#include "blending.h"
 
 
 /*
@@ -1434,6 +1435,210 @@ bool imageio_blit( uint32_t pos_x, uint32_t pos_y,
 	}
 
 	return true;
+}
+
+bool imageio_blend( image_t* dst, uint32_t pos_x, uint32_t pos_y, const image_t* src, blend_mode_t mode )
+{
+	if( dst->channels < src->channels )
+	{
+		return false;
+	}
+
+	void (*blender)( uint8_t* result, uint8_t* a, uint8_t* b, blend_mode_t mode );
+
+	if( src->channels == 4 )
+	{
+		blender = imageio_blend_rgba;
+	}
+	else
+	{
+		blender = imageio_blend_rgb;
+	}
+
+	size_t last_y = pos_y + src->height;
+	size_t last_x = pos_x + src->width;
+
+	for( size_t y = pos_y; y < last_y; y++ )
+	{
+		for( size_t x = pos_x; x < last_x; x++ )
+		{
+			size_t dst_index = (y * dst->width + x) * dst->channels;
+			size_t src_index = ((y - pos_y) * src->width + (x - pos_x)) * src->channels;
+			blender( &dst->pixels[dst_index], &src->pixels[src_index], &dst->pixels[dst_index], mode );
+		}
+	}
+
+	return true;
+}
+
+void imageio_blend_rgb( uint8_t* result, uint8_t* top, uint8_t* bottom, blend_mode_t mode )
+{
+	switch( mode )
+	{
+		case IMAGEIO_BLEND_LIGHTEN:
+			colorblend_rgb_lighten( result, top, bottom );
+			break;
+		case IMAGEIO_BLEND_DARKEN:
+			colorblend_rgb_darken( result, top, bottom );
+			break;
+		case IMAGEIO_BLEND_MULTIPLY:
+			colorblend_rgb_multiply( result, top, bottom );
+			break;
+		case IMAGEIO_BLEND_AVERAGE:
+			colorblend_rgb_average( result, top, bottom );
+			break;
+		case IMAGEIO_BLEND_ADD:
+			colorblend_rgb_add( result, top, bottom );
+			break;
+		case IMAGEIO_BLEND_SUBTRACT:
+			colorblend_rgb_subtract( result, top, bottom );
+			break;
+		case IMAGEIO_BLEND_DIFFERENCE:
+			colorblend_rgb_difference( result, top, bottom );
+			break;
+		case IMAGEIO_BLEND_NEGATION:
+			colorblend_rgb_negation( result, top, bottom );
+			break;
+		case IMAGEIO_BLEND_SCREEN:
+			colorblend_rgb_screen( result, top, bottom );
+			break;
+		case IMAGEIO_BLEND_EXCLUSION:
+			colorblend_rgb_exclusion( result, top, bottom );
+			break;
+		case IMAGEIO_BLEND_OVERLAY:
+			colorblend_rgb_overlay( result, top, bottom );
+			break;
+		case IMAGEIO_BLEND_SOFT_LIGHT:
+			colorblend_rgb_softlight( result, top, bottom );
+			break;
+		case IMAGEIO_BLEND_HARD_LIGHT:
+			colorblend_rgb_hardlight( result, top, bottom );
+			break;
+		case IMAGEIO_BLEND_COLOR_DODGE:
+			colorblend_rgb_colordodge( result, top, bottom );
+			break;
+		case IMAGEIO_BLEND_COLOR_BURN:
+			colorblend_rgb_colorburn( result, top, bottom );
+			break;
+		case IMAGEIO_BLEND_LINEAR_DODGE:
+			colorblend_rgb_lineardodge( result, top, bottom );
+			break;
+		case IMAGEIO_BLEND_LINEAR_BURN:
+			colorblend_rgb_linearburn( result, top, bottom );
+			break;
+		case IMAGEIO_BLEND_LINEAR_LIGHT:
+			colorblend_rgb_linearlight( result, top, bottom );
+			break;
+		case IMAGEIO_BLEND_VIVID_LIGHT:
+			colorblend_rgb_vividlight( result, top, bottom );
+			break;
+		case IMAGEIO_BLEND_PIN_LIGHT:
+			colorblend_rgb_pinlight( result, top, bottom );
+			break;
+		case IMAGEIO_BLEND_HARD_MIX:
+			colorblend_rgb_hardmix( result, top, bottom );
+			break;
+		case IMAGEIO_BLEND_REFLECT:
+			colorblend_rgb_reflect( result, top, bottom );
+			break;
+		case IMAGEIO_BLEND_GLOW:
+			colorblend_rgb_glow( result, top, bottom );
+			break;
+		case IMAGEIO_BLEND_PHOENIX:
+			colorblend_rgb_phoenix( result, top, bottom );
+			break;
+		case IMAGEIO_BLEND_ALPHA: /* not supported so fallback to normal */
+		case IMAGEIO_BLEND_NORMAL: /* fall-through */
+		default:
+			colorblend_rgb_normal( result, top, bottom );
+			break;
+	}
+}
+
+void imageio_blend_rgba( uint8_t* result, uint8_t* top, uint8_t* bottom, blend_mode_t mode )
+{
+	switch( mode )
+	{
+		case IMAGEIO_BLEND_LIGHTEN:
+			colorblend_rgba_lighten( result, top, bottom );
+			break;
+		case IMAGEIO_BLEND_DARKEN:
+			colorblend_rgba_darken( result, top, bottom );
+			break;
+		case IMAGEIO_BLEND_MULTIPLY:
+			colorblend_rgba_multiply( result, top, bottom );
+			break;
+		case IMAGEIO_BLEND_AVERAGE:
+			colorblend_rgba_average( result, top, bottom );
+			break;
+		case IMAGEIO_BLEND_ADD:
+			colorblend_rgba_add( result, top, bottom );
+			break;
+		case IMAGEIO_BLEND_SUBTRACT:
+			colorblend_rgba_subtract( result, top, bottom );
+			break;
+		case IMAGEIO_BLEND_DIFFERENCE:
+			colorblend_rgba_difference( result, top, bottom );
+			break;
+		case IMAGEIO_BLEND_NEGATION:
+			colorblend_rgba_negation( result, top, bottom );
+			break;
+		case IMAGEIO_BLEND_SCREEN:
+			colorblend_rgba_screen( result, top, bottom );
+			break;
+		case IMAGEIO_BLEND_EXCLUSION:
+			colorblend_rgba_exclusion( result, top, bottom );
+			break;
+		case IMAGEIO_BLEND_OVERLAY:
+			colorblend_rgba_overlay( result, top, bottom );
+			break;
+		case IMAGEIO_BLEND_SOFT_LIGHT:
+			colorblend_rgba_softlight( result, top, bottom );
+			break;
+		case IMAGEIO_BLEND_HARD_LIGHT:
+			colorblend_rgba_hardlight( result, top, bottom );
+			break;
+		case IMAGEIO_BLEND_COLOR_DODGE:
+			colorblend_rgba_colordodge( result, top, bottom );
+			break;
+		case IMAGEIO_BLEND_COLOR_BURN:
+			colorblend_rgba_colorburn( result, top, bottom );
+			break;
+		case IMAGEIO_BLEND_LINEAR_DODGE:
+			colorblend_rgba_lineardodge( result, top, bottom );
+			break;
+		case IMAGEIO_BLEND_LINEAR_BURN:
+			colorblend_rgba_linearburn( result, top, bottom );
+			break;
+		case IMAGEIO_BLEND_LINEAR_LIGHT:
+			colorblend_rgba_linearlight( result, top, bottom );
+			break;
+		case IMAGEIO_BLEND_VIVID_LIGHT:
+			colorblend_rgba_vividlight( result, top, bottom );
+			break;
+		case IMAGEIO_BLEND_PIN_LIGHT:
+			colorblend_rgba_pinlight( result, top, bottom );
+			break;
+		case IMAGEIO_BLEND_HARD_MIX:
+			colorblend_rgba_hardmix( result, top, bottom );
+			break;
+		case IMAGEIO_BLEND_REFLECT:
+			colorblend_rgba_reflect( result, top, bottom );
+			break;
+		case IMAGEIO_BLEND_GLOW:
+			colorblend_rgba_glow( result, top, bottom );
+			break;
+		case IMAGEIO_BLEND_PHOENIX:
+			colorblend_rgba_phoenix( result, top, bottom );
+			break;
+		case IMAGEIO_BLEND_ALPHA:
+			colorblend_rgba_alpha( result, top, bottom);
+			break;
+		case IMAGEIO_BLEND_NORMAL: /* fall-through */
+		default:
+			colorblend_rgba_normal( result, top, bottom );
+			break;
+	}
 }
 
 /*

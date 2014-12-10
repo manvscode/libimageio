@@ -110,6 +110,43 @@ imageio_api bool imageio_blit          ( uint32_t pos_x, uint32_t pos_y,
                                          uint32_t dst_width, uint32_t dst_height, uint32_t dst_bytes_per_pixel, uint8_t* dst_pixels,
                                          uint32_t src_width, uint32_t src_height, uint32_t src_bytes_per_pixel, uint8_t* src_pixels );
 
+
+
+imageio_api typedef enum imageio_blend_mode {
+	IMAGEIO_BLEND_NORMAL,
+	IMAGEIO_BLEND_LIGHTEN,
+	IMAGEIO_BLEND_DARKEN,
+	IMAGEIO_BLEND_MULTIPLY,
+	IMAGEIO_BLEND_AVERAGE,
+	IMAGEIO_BLEND_ADD,
+	IMAGEIO_BLEND_SUBTRACT,
+	IMAGEIO_BLEND_DIFFERENCE,
+	IMAGEIO_BLEND_NEGATION,
+	IMAGEIO_BLEND_SCREEN,
+	IMAGEIO_BLEND_EXCLUSION,
+	IMAGEIO_BLEND_OVERLAY,
+	IMAGEIO_BLEND_SOFT_LIGHT,
+	IMAGEIO_BLEND_HARD_LIGHT,
+	IMAGEIO_BLEND_COLOR_DODGE,
+	IMAGEIO_BLEND_COLOR_BURN,
+	IMAGEIO_BLEND_LINEAR_DODGE,
+	IMAGEIO_BLEND_LINEAR_BURN,
+	IMAGEIO_BLEND_LINEAR_LIGHT,
+	IMAGEIO_BLEND_VIVID_LIGHT,
+	IMAGEIO_BLEND_PIN_LIGHT,
+	IMAGEIO_BLEND_HARD_MIX,
+	IMAGEIO_BLEND_REFLECT,
+	IMAGEIO_BLEND_GLOW,
+	IMAGEIO_BLEND_PHOENIX,
+	IMAGEIO_BLEND_ALPHA,
+} blend_mode_t;
+
+imageio_api bool imageio_blend( image_t* dst, uint32_t pos_x, uint32_t pos_y, const image_t* src, blend_mode_t mode );
+
+imageio_api void imageio_blend_rgb( uint8_t* result, uint8_t* top, uint8_t* bottom, blend_mode_t mode );
+imageio_api void imageio_blend_rgba( uint8_t* result, uint8_t* top, uint8_t* bottom, blend_mode_t mode );
+
+
 imageio_api void imageio_swap_red_and_blue        ( uint32_t width, uint32_t height, uint32_t byte_count, uint8_t* bitmap );
 imageio_api void imageio_flip_horizontally        ( uint32_t width, uint32_t height, uint32_t byte_count, uint8_t* bitmap );
 imageio_api void imageio_flip_vertically          ( uint32_t width, uint32_t height, uint32_t byte_count, uint8_t* bitmap );
