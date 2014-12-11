@@ -29,6 +29,13 @@
 #include "blending.h"
 
 
+#ifdef _WIN32
+#define strcasecmp    _stricmp
+#define snprintf      _snprintf
+#endif
+
+
+
 /*
  *	Miscellaneous Utility functions...
  */
@@ -2044,10 +2051,10 @@ void imageio_rgb_to_yuv444( uint32_t width, uint32_t height, uint32_t byte_count
 			uint8_t G = bitmap[ imageIdx + 1 ];
 			uint8_t B = bitmap[ imageIdx + 2 ];
 
-			uint8_t Y = 0.299 * R + 0.587 * G + 0.114 * B; /* Y */
-			bitmap[ imageIdx + 0 ] = Y; /* Y */
-			bitmap[ imageIdx + 1 ] = (B - Y) * 0.565; /* U' */
-			bitmap[ imageIdx + 2 ] = (R - Y) * 0.713; /* V' */
+			float Y = (0.299f * R + 0.587f * G + 0.114f * B); /* Y */
+			bitmap[ imageIdx + 0 ] = (uint8_t) Y; /* Y */
+			bitmap[ imageIdx + 1 ] = (uint8_t) ((B - Y) * 0.565f); /* U' */
+			bitmap[ imageIdx + 2 ] = (uint8_t) ((R - Y) * 0.713f); /* V' */
 		}
 	}
 	else
@@ -2077,9 +2084,9 @@ void imageio_yuv444_to_rgb( uint32_t width, uint32_t height, uint32_t byte_count
 			uint8_t U = bitmap[ imageIdx + 1 ];
 			uint8_t V = bitmap[ imageIdx + 2 ];
 
-			bitmap[ imageIdx + 0 ] = Y + 1.403 * V; /* R */
-			bitmap[ imageIdx + 1 ] = Y - 0.344 * U - 0.714 * V; /* G */
-			bitmap[ imageIdx + 2 ] = Y + 1.770 * U; /* B */
+			bitmap[ imageIdx + 0 ] = (uint8_t) (Y + 1.403f * V); /* R */
+			bitmap[ imageIdx + 1 ] = (uint8_t) (Y - 0.344f * U - 0.714f * V); /* G */
+			bitmap[ imageIdx + 2 ] = (uint8_t) (Y + 1.770f * U); /* B */
 		}
 	}
 	else
