@@ -26,7 +26,7 @@
 extern "C" {
 #endif 
 
-#if defined(WIN32)
+#if defined(WIN32) && defined(DLL)
 #ifdef EXPORT_DLL
 #define imageio_api			__declspec( dllexport )
 #else
