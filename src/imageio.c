@@ -282,6 +282,14 @@ bool imageio_image_load( image_t* img, const char* filename, image_file_format_t
 			break;
 	}
 
+	if( !result )
+	{
+		img->bits_per_pixel = 0;
+		img->channels       = 0;
+		img->width          = 0;
+		img->height         = 0;
+		img->pixels         = 0;
+	}
 
 	return result;
 }
