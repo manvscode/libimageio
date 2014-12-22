@@ -8,12 +8,12 @@
 void png_save32( void )
 {
 	image_t image;
-	image.width          = 512;
-	image.height         = 512;
-	image.bits_per_pixel = 32;
-	size_t len           = 4 * 512 * 512;
-	image.pixels         = (uint8_t*) malloc( sizeof(uint8_t) * len );
-	uint32_t* colors     = (uint32_t*) image.pixels;
+	image.width      = 512;
+	image.height     = 512;
+	image.bit_depth  = 32;
+	size_t len       = 4 * 512 * 512;
+	image.pixels     = (uint8_t*) malloc( sizeof(uint8_t) * len );
+	uint32_t* colors = (uint32_t*) image.pixels;
 
 	for( size_t i = 1; i < 511; i++ )
 	{
@@ -41,11 +41,11 @@ void png_save32( void )
 void png_save8( void )
 {
 	image_t image;
-	image.width          = 512;
-	image.height         = 512;
-	image.bits_per_pixel = 8;
-	size_t len           = 1 * 512 * 512;
-	image.pixels         = (uint8_t*) malloc( sizeof(uint8_t) * len );
+	image.width     = 512;
+	image.height    = 512;
+	image.bit_depth = 8;
+	size_t len      = 1 * 512 * 512;
+	image.pixels    = (uint8_t*) malloc( sizeof(uint8_t) * len );
 
 	for( size_t i = 0; i < 512; i++ )
 	{

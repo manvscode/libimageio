@@ -19,10 +19,10 @@ int main( int argc, char* argv[] )
 
 
 		image_t dst = (image_t) {
-			.width          = (uint16_t) fmax( a.width, b.width ),
-			.height         = (uint16_t) fmax( a.width, b.width ),
-			.bits_per_pixel = (uint8_t) fmax( a.bits_per_pixel, b.bits_per_pixel ),
-			.channels       = 4
+			.width     = (uint16_t) fmax( a.width, b.width ),
+			.height    = (uint16_t) fmax( a.width, b.width ),
+			.bit_depth = (uint8_t) fmax( a.bit_depth, b.bit_depth ),
+			.channels  = 4
 		};
 
 		dst.pixels = malloc( dst.width * dst.height * dst.channels );
@@ -54,7 +54,9 @@ int main( int argc, char* argv[] )
 
 		imageio_image_save( &dst, "blended.png", IMAGEIO_PNG );
 
-		free( dst.pixels );
+		imageio_image_destroy( &b );
+		imageio_image_destroy( &a );
+		imageio_image_destroy( &dst );
 	}
 
 	return 0;

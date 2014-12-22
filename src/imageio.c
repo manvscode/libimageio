@@ -132,7 +132,7 @@ typedef struct pvr_header {
     uint32_t num_mipmaps;
     uint32_t flags;
     uint32_t data_length;
-    uint32_t bits_per_pixel;
+    uint32_t bit_depth;
     uint32_t bitmask_red;
     uint32_t bitmask_green;
     uint32_t bitmask_blue;
@@ -143,7 +143,7 @@ typedef struct pvr_header {
 
 
 static __inline bool imageio_bitmap_load ( const char* filename, bitmap_info_header_t* info_header, uint8_t** bitmap );
-static __inline bool imageio_bitmap_save ( const char* filename, uint32_t width, uint32_t height, uint32_t bits_per_pixel, uint8_t* imageData );
+static __inline bool imageio_bitmap_save ( const char* filename, uint32_t width, uint32_t height, uint32_t bit_depth, uint8_t* imageData );
 static __inline bool imageio_targa_load  ( const char* filename, targa_file_header_t* p_file_header, uint8_t** bitmap );
 static __inline bool imageio_targa_save  ( const char* filename, targa_file_header_t* p_file_header, uint8_t* bitmap );
 static __inline bool imageio_pvr_load    ( const char* filename, pvr_header_t* p_header, uint8_t** bitmap );
@@ -238,10 +238,10 @@ bool imageio_image_load( image_t* img, const char* filename, image_file_format_t
 			if( result )
 			{
 				assert( img->pixels != NULL );
-				img->bits_per_pixel = bmpInfoHeader.biBitCount;
-				img->channels       = bmpInfoHeader.biBitCount >> 3;
-				img->width          = bmpInfoHeader.biWidth;
-				img->height         = bmpInfoHeader.biHeight;
+				img->bit_depth = (uint8_t) bmpInfoHeader.biBitCount;
+				img->channels  = bmpInfoHeader.biBitCount >> 3;
+				img->width     = bmpInfoHeader.biWidth;
+				img->height    = bmpInfoHeader.biHeight;
 			}
 			break;
 		}
@@ -252,10 +252,10 @@ bool imageio_image_load( image_t* img, const char* filename, image_file_format_t
 			if( result )
 			{
 				assert( img->pixels != NULL );
-				img->bits_per_pixel = tgaHeader.bitCount;
-				img->channels       = tgaHeader.bitCount >> 3;
-				img->width          = tgaHeader.width;
-				img->height         = tgaHeader.height;
+				img->bit_depth = tgaHeader.bitCount;
+				img->channels  = tgaHeader.bitCount >> 3;
+				img->width     = tgaHeader.width;
+				img->height    = tgaHeader.height;
 			}
 			break;
 		}
@@ -271,10 +271,10 @@ bool imageio_image_load( image_t* img, const char* filename, image_file_format_t
 			if( result )
 			{
 				assert( img->pixels != NULL );
-				img->bits_per_pixel = header.bits_per_pixel;
-				img->channels       = header.bitmask_alpha > 0 ? 4 : 3;
-				img->width          = header.width;
-				img->height         = header.height;
+				img->bit_depth = header.bit_depth;
+				img->channels  = header.bitmask_alpha > 0 ? 4 : 3;
+				img->width     = header.width;
+				img->height    = header.height;
 			}
 			break;
 		}
@@ -284,11 +284,11 @@ bool imageio_image_load( image_t* img, const char* filename, image_file_format_t
 
 	if( !result )
 	{
-		img->bits_per_pixel = 0;
-		img->channels       = 0;
-		img->width          = 0;
-		img->height         = 0;
-		img->pixels         = 0;
+		img->bit_depth = 0;
+		img->channels  = 0;
+		img->width     = 0;
+		img->height    = 0;
+		img->pixels    = 0;
 	}
 
 	return result;
@@ -302,14 +302,14 @@ bool imageio_image_save( const image_t* img, const char* filename, image_file_fo
 	{
 		case IMAGEIO_BMP:
 		{
-			result = imageio_bitmap_save( filename, img->width, img->height, img->bits_per_pixel, img->pixels );
+			result = imageio_bitmap_save( filename, img->width, img->height, img->bit_depth, img->pixels );
 			assert( img->pixels != NULL );
 			break;
 		}
 		case IMAGEIO_TGA:
 		{
 			targa_file_header_t tgaFileHeader;
-			tgaFileHeader.bitCount = img->bits_per_pixel;
+			tgaFileHeader.bitCount = img->bit_depth;
 			tgaFileHeader.width = img->width;
 			tgaFileHeader.height = img->height;
 			result = imageio_targa_save( filename, &tgaFileHeader, img->pixels );
@@ -339,7 +339,7 @@ void imageio_image_destroy( image_t* img )
 bool imageio_bitmap_load( const char* filename, bitmap_info_header_t* info_header, uint8_t** bitmap )
 {
 	bitmap_file_header_t bmp_file_header;
-	register uint32_t		imageIdx = 0;
+	register uint32_t imageIdx = 0;
 	unsigned short bytesPerPixel = 0;
 	uint32_t bitmapSize = 0;
 	uint32_t scanlineBytes = 0;
@@ -398,7 +398,7 @@ bool imageio_bitmap_load( const char* filename, bitmap_info_header_t* info_heade
 	return true;
 }
 
-bool imageio_bitmap_save( const char* filename, uint32_t width, uint32_t height, uint32_t bits_per_pixel, uint8_t* imageData )
+bool imageio_bitmap_save( const char* filename, uint32_t width, uint32_t height, uint32_t bit_depth, uint8_t* imageData )
 {
 	FILE* filePtr;
 	bitmap_file_header_t bmp_file_header;
@@ -406,7 +406,7 @@ bool imageio_bitmap_save( const char* filename, uint32_t width, uint32_t height,
 	uint8_t nullByte;
 	uint32_t imageIdx = 0;
 	uint32_t bitmapIdx = 0;
-	uint32_t bytesPerPixel = bits_per_pixel >> 3;
+	uint32_t bytesPerPixel = bit_depth >> 3;
 	uint32_t stride = (width * bytesPerPixel + 3) & ~3;
 	uint32_t scanlineBytes = width * bytesPerPixel;
 
@@ -424,7 +424,7 @@ bool imageio_bitmap_save( const char* filename, uint32_t width, uint32_t height,
 	/* Define the info_header */
 	info_header.biSize = sizeof(bitmap_info_header_t);
 	info_header.biPlanes = 1;
-	info_header.biBitCount = bits_per_pixel;
+	info_header.biBitCount = bit_depth;
 	info_header.biCompression = BI_RGB;		/* No compression */
 	info_header.biSizeImage = stride * height;  /* w * h * (4 bytes) */
 	info_header.biXPelsPerMeter = 0;
@@ -564,7 +564,6 @@ bool imageio_png_load( const char* filename, image_t* image )
 {
 	png_structp png_ptr;
 	png_infop info_ptr;
-	png_infop end_info;;
 	uint8_t header[8];
 	FILE *file;
 
@@ -599,18 +598,9 @@ bool imageio_png_load( const char* filename, image_t* image )
 		return false;
 	}
 
-    end_info = png_create_info_struct( png_ptr );
-    if( !end_info )
-    {
-        png_destroy_read_struct( &png_ptr, &info_ptr, (png_infopp) NULL );
-        fclose( file );
-        return false;
-    }
-
-
 	if( setjmp(png_jmpbuf(png_ptr)) )
 	{
-        png_destroy_read_struct( &png_ptr, &info_ptr, &end_info );
+        png_destroy_read_struct( &png_ptr, &info_ptr, NULL );
 		fclose( file );
 		return false;
 	}
@@ -620,51 +610,90 @@ bool imageio_png_load( const char* filename, image_t* image )
 
 	png_read_info( png_ptr, info_ptr );
 
-	png_byte color_type  = png_get_color_type( png_ptr, info_ptr );
-	/*png_byte bit_depth   = png_get_bit_depth( png_ptr, info_ptr );*/
+	//png_uint_32 width, height;
+	//int bits_per_channel, color_type, interlace_type;
+	//png_get_IHDR( png_ptr, info_ptr, &width, &height, &bits_per_channel, &color_type, &interlace_type, NULL, NULL );
+
+	//png_byte interlace_type   = png_get_interlace_type( png_ptr, info_ptr );
+	png_byte color_type       = png_get_color_type( png_ptr, info_ptr );
+	png_byte bits_per_channel = png_get_bit_depth( png_ptr, info_ptr );
 
 	image->width  = png_get_image_width( png_ptr, info_ptr );
 	image->height = png_get_image_height( png_ptr, info_ptr );
 
 	switch( color_type )
 	{
+		case PNG_COLOR_TYPE_PALETTE:
+      		png_set_palette_to_rgb( png_ptr );
+
+			/* expanded to RGB */
+			image->bit_depth = 3 * bits_per_channel; //png_get_bit_depth( png_ptr, info_ptr );
+			image->channels  = 3;
+			break;
 		case PNG_COLOR_TYPE_RGB:
-			image->bits_per_pixel = 3 * png_get_bit_depth( png_ptr, info_ptr );
-			image->channels       = 3;
+			image->bit_depth = 3 * bits_per_channel; //png_get_bit_depth( png_ptr, info_ptr );
+			image->channels  = 3;
 			break;
 		case PNG_COLOR_TYPE_RGB_ALPHA:
-			image->bits_per_pixel = 4 * png_get_bit_depth( png_ptr, info_ptr );
-			image->channels       = 4;
+			image->bit_depth = 4 * bits_per_channel; //png_get_bit_depth( png_ptr, info_ptr );
+			image->channels  = 4;
 			break;
 		default:
 			/* paletted types and grayscale not supported */
-        	png_destroy_read_struct( &png_ptr, &info_ptr, &end_info );
+			png_destroy_read_struct( &png_ptr, &info_ptr, NULL );
 			fclose( file );
 			return false;
 	}
+
+	#if 0
+	int screen_gamma = PNG_DEFAULT_sRGB;  /* A good guess for a PC monitor */
+	int intent;
+
+	if( png_get_sRGB( png_ptr, info_ptr, &intent ) != 0 )
+	{
+		png_set_gamma( png_ptr, screen_gamma, PNG_DEFAULT_sRGB );
+	}
+	else
+	{
+		double image_gamma;
+		if( png_get_gAMA( png_ptr, info_ptr, &image_gamma ) != 0 )
+		{
+			png_set_gamma( png_ptr, screen_gamma, image_gamma );
+		}
+		else
+		{
+			png_set_gamma( png_ptr, screen_gamma, 0.45455 );
+		}
+	}
+	#endif
+	#if 0
+	if( (color_type & PNG_COLOR_MASK_COLOR) != 0 )
+	{
+		/* Flip the RGB pixels to BGR (or RGBA to BGRA) */
+		png_set_bgr(png_ptr);
+	}
+	#endif
 
 	/*number_of_passes = png_set_interlace_handling( png_ptr );*/
 	png_read_update_info( png_ptr, info_ptr);
 
     png_size_t row_bytes = png_get_rowbytes( png_ptr, info_ptr );
 
-    // glTexImage2d requires rows to be 4-byte aligned
-    //row_bytes += 3 - ((row_bytes-1) % 4);
-
 	image->pixels = malloc( row_bytes * image->height * sizeof(png_byte) );
 
     if( !image->pixels )
     {
-        png_destroy_read_struct( &png_ptr, &info_ptr, &end_info );
+        png_destroy_read_struct( &png_ptr, &info_ptr, NULL );
         fclose( file );
         return false;
     }
 
     /* row_pointers is for pointing to image->pixels for reading the png with libpng */
     png_bytep* row_pointers = malloc( image->height * sizeof(png_bytep) );
+
     if( !row_pointers )
     {
-        png_destroy_read_struct( &png_ptr, &info_ptr, &end_info );
+        png_destroy_read_struct( &png_ptr, &info_ptr, NULL );
         free( image->pixels );
         fclose( file );
         return false;
@@ -679,7 +708,7 @@ bool imageio_png_load( const char* filename, image_t* image )
 
 	if( setjmp(png_jmpbuf(png_ptr)) )
 	{
-        png_destroy_read_struct( &png_ptr, &info_ptr, &end_info );
+        png_destroy_read_struct( &png_ptr, &info_ptr, NULL );
 		free( row_pointers );
         free( image->pixels );
         fclose( file );
@@ -689,7 +718,9 @@ bool imageio_png_load( const char* filename, image_t* image )
 	png_read_image( png_ptr, row_pointers );
 
 	free( row_pointers );
-	fclose(file);
+	png_read_end( png_ptr, info_ptr );
+    png_destroy_read_struct( &png_ptr, &info_ptr, NULL );
+	fclose( file );
 
 	return true;
 }
@@ -740,7 +771,7 @@ bool imageio_png_save( const char* filename, const image_t* image )
 
 	int bit_depth       = 8;
 	int color_type      = PNG_COLOR_TYPE_RGB_ALPHA;
-	int bytes_per_pixel = image->bits_per_pixel >> 3;
+	int bytes_per_pixel = image->bit_depth >> 3;
 
 
 	switch( bytes_per_pixel )
@@ -808,10 +839,10 @@ bool imageio_png_save( const char* filename, const image_t* image )
  *  Image stretching functions...
  */
 void imageio_image_resize( uint32_t src_width, uint32_t src_height, const uint8_t* src_bitmap,
-                           uint32_t dst_width, uint32_t dst_height, uint8_t* dst_bitmap, uint32_t bits_per_pixel,
+                           uint32_t dst_width, uint32_t dst_height, uint8_t* dst_bitmap, uint32_t bit_depth,
                            resize_algorithm_t algorithm )
 {
-	uint32_t byte_count = bits_per_pixel >> 3;
+	uint32_t byte_count = bit_depth >> 3;
 	assert( src_bitmap != NULL || dst_bitmap != NULL );
 	assert( src_width != 0 || src_height != 0 );
 	assert( byte_count > 2 );
@@ -820,8 +851,8 @@ void imageio_image_resize( uint32_t src_width, uint32_t src_height, const uint8_
 	{
 		case ALG_NEARESTNEIGHBOR:
 			/* forces both bitmaps to have the same bit depth */
-			imageio_resize_nearest_neighbor( src_width, src_height, bits_per_pixel, src_bitmap,
-				             dst_width, dst_height, bits_per_pixel, dst_bitmap );
+			imageio_resize_nearest_neighbor( src_width, src_height, bit_depth, src_bitmap,
+				             dst_width, dst_height, bit_depth, dst_bitmap );
 			break;
 		case ALG_BILINEAR:
 			switch( byte_count )
@@ -829,7 +860,7 @@ void imageio_image_resize( uint32_t src_width, uint32_t src_height, const uint8_
 				case 0:
 				case 1:
 				case 2:
-					assert( false ); /* unsupported bits_per_pixel's */
+					assert( false ); /* unsupported bit_depth's */
 					break;
 				case 3:
 						imageio_resize_bilinear_rgb( src_width, src_height, src_bitmap, dst_width, dst_height, dst_bitmap, byte_count );
@@ -863,7 +894,7 @@ void imageio_image_resize( uint32_t src_width, uint32_t src_height, const uint8_
 				case 0:
 				case 1:
 				case 2:
-					assert( false ); /* unsupported bits_per_pixel's */
+					assert( false ); /* unsupported bit_depth's */
 					break;
 				case 3:
 						imageio_resize_bicubic_rgb( src_width, src_height, src_bitmap, dst_width, dst_height, dst_bitmap, byte_count );
@@ -1773,15 +1804,15 @@ void imageio_flip_vertically_nocopy( uint32_t width, uint32_t height, const uint
 /*
  * Edge Detection: k is the maximum color distance that signifies an edge
  */
-bool imageio_detect_edges( uint32_t width, uint32_t height, uint32_t bits_per_pixel, const uint8_t* src_bitmap, uint8_t* dst_bitmap, uint32_t k )
+bool imageio_detect_edges( uint32_t width, uint32_t height, uint32_t bit_depth, const uint8_t* src_bitmap, uint8_t* dst_bitmap, int32_t k )
 {
-	uint32_t byte_count = bits_per_pixel >> 3; /* 4 ==> RGBA32, 3==>RGB32 , 2 ==> RGB16 */
+	uint32_t byte_count = bit_depth >> 3; /* 4 ==> RGBA32, 3==>RGB32 , 2 ==> RGB16 */
 	register uint32_t y;
 	register uint32_t x;
-	assert( bits_per_pixel != 0 );
+	assert( bit_depth != 0 );
 	assert( src_bitmap != NULL || dst_bitmap != NULL );
 
-	if( !src_bitmap || !dst_bitmap || bits_per_pixel == 0 )
+	if( !src_bitmap || !dst_bitmap || bit_depth == 0 )
 	{
 		return false;
 	}
@@ -1838,15 +1869,15 @@ bool imageio_detect_edges( uint32_t width, uint32_t height, uint32_t bits_per_pi
 /*
  * Color Extraction: Marks white all the pixels that are no greater than k distance to the color.
  */
-bool imageio_extract_color( uint32_t width, uint32_t height, uint32_t bits_per_pixel, const uint8_t* src_bitmap, uint8_t* dst_bitmap, uint32_t color, uint32_t k )
+bool imageio_extract_color( uint32_t width, uint32_t height, uint32_t bit_depth, const uint8_t* src_bitmap, uint8_t* dst_bitmap, uint32_t color, uint32_t k )
 {
-	uint32_t byte_count = bits_per_pixel >> 3; /* 4 ==> RGBA32, 3==>RGB32 , 2 ==> RGB16 */
+	uint32_t byte_count = bit_depth >> 3; /* 4 ==> RGBA32, 3==>RGB32 , 2 ==> RGB16 */
 	register uint32_t y;
 	register uint32_t x;
-	assert( bits_per_pixel != 0 );
+	assert( bit_depth != 0 );
 	assert( src_bitmap != NULL || dst_bitmap != NULL );
 
-	if( !src_bitmap || !dst_bitmap || bits_per_pixel == 0 )
+	if( !src_bitmap || !dst_bitmap || bit_depth == 0 )
 	{
 		return false;
 	}
@@ -1881,15 +1912,15 @@ bool imageio_extract_color( uint32_t width, uint32_t height, uint32_t bits_per_p
 /*
  * Grayscale conversion
  */
-bool imageio_convert_to_grayscale( uint32_t width, uint32_t height, uint32_t bits_per_pixel, const uint8_t* src_bitmap, uint8_t* dst_bitmap )
+bool imageio_convert_to_grayscale( uint32_t width, uint32_t height, uint32_t bit_depth, const uint8_t* src_bitmap, uint8_t* dst_bitmap )
 {
-	uint32_t byte_count = bits_per_pixel >> 3; /* 4 ==> RGBA32, 3==>RGB32 , 2 ==> RGB16 */
+	uint32_t byte_count = bit_depth >> 3; /* 4 ==> RGBA32, 3==>RGB32 , 2 ==> RGB16 */
 	register uint32_t y;
 	register uint32_t x;
-	assert( bits_per_pixel != 0 );
+	assert( bit_depth != 0 );
 	assert( src_bitmap != NULL || dst_bitmap != NULL );
 
-	if( !src_bitmap || !dst_bitmap || bits_per_pixel == 0 )
+	if( !src_bitmap || !dst_bitmap || bit_depth == 0 )
 	{
 		return false;
 	}
@@ -1918,18 +1949,18 @@ bool imageio_convert_to_grayscale( uint32_t width, uint32_t height, uint32_t bit
 /*
  * Colorscale conversion
  */
-bool imageio_convert_to_colorscale( uint32_t width, uint32_t height, uint32_t bits_per_pixel, const uint8_t* src_bitmap, uint8_t* dst_bitmap, uint32_t color )
+bool imageio_convert_to_colorscale( uint32_t width, uint32_t height, uint32_t bit_depth, const uint8_t* src_bitmap, uint8_t* dst_bitmap, uint32_t color )
 {
-	uint32_t byte_count = bits_per_pixel >> 3; /* 4 ==> RGBA32, 3==>RGB32 , 2 ==> RGB16 */
+	uint32_t byte_count = bit_depth >> 3; /* 4 ==> RGBA32, 3==>RGB32 , 2 ==> RGB16 */
 	register uint32_t y;
 	register uint32_t x;
 	uint8_t r = r32(color);
 	uint8_t g = g32(color);
 	uint8_t b = b32(color);
 	assert( src_bitmap != NULL || dst_bitmap != NULL );
-	assert( bits_per_pixel != 0 );
+	assert( bit_depth != 0 );
 
-	if( !src_bitmap || !dst_bitmap || bits_per_pixel == 0 )
+	if( !src_bitmap || !dst_bitmap || bit_depth == 0 )
 	{
 		return false;
 	}
@@ -1964,15 +1995,15 @@ bool imageio_convert_to_colorscale( uint32_t width, uint32_t height, uint32_t bi
 /*
  * Light or contrast modification
  */
-void imageio_modify_contrast( uint32_t width, uint32_t height, uint32_t bits_per_pixel, const uint8_t* src_bitmap, uint8_t* dst_bitmap, int contrast )
+void imageio_modify_contrast( uint32_t width, uint32_t height, uint32_t bit_depth, const uint8_t* src_bitmap, uint8_t* dst_bitmap, int contrast )
 {
-	uint32_t byte_count = bits_per_pixel >> 3; /* 4 ==> RGBA32, 3==>RGB32 , 2 ==> RGB16 */
+	uint32_t byte_count = bit_depth >> 3; /* 4 ==> RGBA32, 3==>RGB32 , 2 ==> RGB16 */
 	register uint32_t y;
 	register uint32_t x;
 	register uint32_t colorIndex;
 	uint32_t transform[ 256 ];
 	assert( src_bitmap != NULL || dst_bitmap != NULL );
-	assert( bits_per_pixel != 0 );
+	assert( bit_depth != 0 );
 
 	for( colorIndex = 0; colorIndex < 256; colorIndex++ )
 	{
@@ -2001,15 +2032,15 @@ void imageio_modify_contrast( uint32_t width, uint32_t height, uint32_t bits_per
 		}
 }
 
-void imageio_modify_brightness( uint32_t width, uint32_t height, uint32_t bits_per_pixel, const uint8_t* src_bitmap, uint8_t* dst_bitmap, int brightness )
+void imageio_modify_brightness( uint32_t width, uint32_t height, uint32_t bit_depth, const uint8_t* src_bitmap, uint8_t* dst_bitmap, int brightness )
 {
-	uint32_t byte_count = bits_per_pixel >> 3; /* 4 ==> RGBA32, 3==>RGB32 , 2 ==> RGB16 */
+	uint32_t byte_count = bit_depth >> 3; /* 4 ==> RGBA32, 3==>RGB32 , 2 ==> RGB16 */
 	register uint32_t y;
 	register uint32_t x;
 	register unsigned short colorIndex;
 	uint8_t transform[ 256 ] = {0};
 	assert( src_bitmap != NULL || dst_bitmap != NULL );
-	assert( bits_per_pixel != 0 );
+	assert( bit_depth != 0 );
 
 	for( colorIndex = 0; colorIndex < 256; colorIndex++ )
 	{
@@ -2108,7 +2139,7 @@ const char* imageio_image_string( const image_t* img )
 {
 	static char buffer[ 512 ];
 	snprintf( buffer, sizeof(buffer), "[image bpp=%02u channels=%u w=%05u h=%05u data=%02x%02x%02x%02x%02x%02x%02x%02x... ]",
-	          img->bits_per_pixel, img->channels, img->width, img->height,
+	          img->bit_depth, img->channels, img->width, img->height,
 	          img->pixels[0], img->pixels[1], img->pixels[2], img->pixels[3],
 	          img->pixels[4], img->pixels[5], img->pixels[6], img->pixels[7] );
 	buffer[ sizeof(buffer) - 1 ] = '\0';
