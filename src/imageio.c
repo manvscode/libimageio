@@ -821,7 +821,7 @@ bool imageio_png_save( const char* filename, const image_t* image )
 
 	if( setjmp(png_jmpbuf(png_ptr)))
 	{
-        png_destroy_write_struct( &png_ptr, &info_ptr );
+		png_destroy_write_struct( &png_ptr, &info_ptr );
 		free( row_pointers );
 		fclose( file );
 		return false;
@@ -829,9 +829,10 @@ bool imageio_png_save( const char* filename, const image_t* image )
 
 	png_write_image( png_ptr, row_pointers );
 	png_write_end( png_ptr, NULL );
-
+	png_destroy_write_struct( &png_ptr, &info_ptr );
 	free( row_pointers );
 	fclose( file );
+
 	return true;
 }
 
