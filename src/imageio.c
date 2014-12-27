@@ -2136,6 +2136,47 @@ void imageio_yuv444_to_rgb( uint32_t width, uint32_t height, uint32_t byte_count
 	}
 }
 
+bool imageio_is_opaque( const image_t* img, bool* p_partially_opaque )
+{
+	bool completely_opaque     = true;
+	bool contains_opaque_pixel = false;
+
+	if( img->channels == 4 )
+	{
+		for( size_t y = 0; y < img->height; y++ )
+		{
+			for( size_t x = 0; x < img->width; x++ )
+			{
+				size_t index = (y * img->width + x) * img->channels;
+				bool is_pixel_opaque = img->pixels[ index + 3 ] > 0;
+
+				if( !contains_opaque_pixel && is_pixel_opaque )
+				{
+					contains_opaque_pixel = true;
+				}
+
+				if( completely_opaque && !is_pixel_opaque )
+				{
+					completely_opaque = false;
+				}
+
+			}
+		}
+	}
+	else
+	{
+		completely_opaque     = true;
+		contains_opaque_pixel = true;
+	}
+
+	if( p_partially_opaque )
+	{
+		*p_partially_opaque = contains_opaque_pixel;
+	}
+
+	return completely_opaque;
+}
+
 const char* imageio_image_string( const image_t* img )
 {
 	static char buffer[ 512 ];

@@ -161,6 +161,7 @@ imageio_api void imageio_modify_contrast          ( uint32_t width, uint32_t hei
 imageio_api void imageio_modify_brightness        ( uint32_t width, uint32_t height, uint32_t bit_depth, const uint8_t* src_bitmap, uint8_t* dst_bitmap, int brightness );
 imageio_api void imageio_rgb_to_yuv444            ( uint32_t width, uint32_t height, uint32_t byte_count, uint8_t* bitmap );
 imageio_api void imageio_yuv444_to_rgb            ( uint32_t width, uint32_t height, uint32_t byte_count, uint8_t* bitmap );
+imageio_api bool imageio_is_opaque                ( const image_t* img, bool* p_partially_opaque );
 
 imageio_api const char* imageio_image_string  ( const image_t* img );
 
