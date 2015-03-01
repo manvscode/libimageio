@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2014 by Joseph A. Marrero.  http://www.manvscode.com/
+ * Copyright (C) 2009-2015 by Joseph A. Marrero.  http://www.manvscode.com/
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -102,7 +102,7 @@ int main( int argc, char* argv[] )
 void help( void )
 {
 	printf( "----[ Image to C Source Converter ]-----------------\n" );
-	printf( "Copyright 2010-2014, Joseph A. Marrero\n" );
+	printf( "Copyright 2009-2015, Joseph A. Marrero\n" );
 	printf( "http://www.manvscode.com/\n\n" );
 	printf( "Command line options:\n" );
 

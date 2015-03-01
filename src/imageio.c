@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2014 Joseph A. Marrero.  http://www.manvscode.com/
+ * Copyright (C) 2009-2015 Joseph A. Marrero.  http://www.manvscode.com/
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -324,6 +324,24 @@ bool imageio_image_save( const image_t* img, const char* filename, image_file_fo
 			break;
 	}
 
+
+	return result;
+}
+
+bool imageio_image_create( image_t* img, uint16_t width, uint16_t height, uint8_t bit_depth )
+{
+	bool result = false;
+
+	if( img )
+	{
+		img->bit_depth = bit_depth;
+		img->channels  = bit_depth >> 3;
+		img->width     = width;
+		img->height    = height;
+		img->pixels    = malloc( img->width * img->height * img->channels );
+
+		result = img->pixels != NULL;
+	}
 
 	return result;
 }
@@ -2186,4 +2204,236 @@ const char* imageio_image_string( const image_t* img )
 	          img->pixels[4], img->pixels[5], img->pixels[6], img->pixels[7] );
 	buffer[ sizeof(buffer) - 1 ] = '\0';
 	return buffer;
+}
+
+uint32_t imageio_get_pixel( image_t* img, int x, int y )
+{
+	assert( img->channels == 3 || img->channels == 4 );
+	size_t index = (img->width * y + x) * img->channels;
+	uint32_t* color = (uint32_t*) &img->pixels[ index ];
+	return *color;
+}
+
+void imageio_set_pixel( image_t* img, int x, int y, uint32_t color )
+{
+	assert( img->channels == 3 || img->channels == 4 );
+	size_t index = (img->width * y + x) * img->channels;
+
+	//printf( "imageio_set_pixel() #%06X \n", color );
+
+	if( img->channels == 4 )
+	{
+		//uint8_t* pcolor = (uint8_t*) &color;
+		//colorblend_rgba_alpha( &img->pixels[index], pcolor, &img->pixels[index] );
+		img->pixels[ index + 0 ] = channelblend_alpha( r32(color), img->pixels[ index + 0 ], a32(color) / 255.0f );
+		img->pixels[ index + 1 ] = channelblend_alpha( g32(color), img->pixels[ index + 1 ], a32(color) / 255.0f );
+		img->pixels[ index + 2 ] = channelblend_alpha( b32(color), img->pixels[ index + 2 ], a32(color) / 255.0f );
+		img->pixels[ index + 3 ] = channelblend_alpha( a32(color), img->pixels[ index + 3 ], a32(color) / 255.0f );
+	}
+	else
+	{
+		img->pixels[ index + 0 ] = r24(color);
+		img->pixels[ index + 1 ] = g24(color);
+		img->pixels[ index + 2 ] = b24(color);
+	}
+}
+
+void imageio_set_pixel_aa( image_t* img, int x, int y, uint32_t color, float intensity )
+{
+	assert( img->channels == 3 || img->channels == 4 );
+	size_t index = (img->width * y + x) * img->channels;
+
+	//printf( "imageio_set_pixel() #%06X   %0.3f\n", color, intensity );
+
+	if( img->channels == 4 )
+	{
+		img->pixels[ index + 0 ] = (1 - intensity) * r32(color) + intensity * img->pixels[ index + 0 ];
+		img->pixels[ index + 1 ] = (1 - intensity) * g32(color) + intensity * img->pixels[ index + 1 ];
+		img->pixels[ index + 2 ] = (1 - intensity) * b32(color) + intensity * img->pixels[ index + 2 ];
+		img->pixels[ index + 3 ] = (1 - intensity) * a32(color) + intensity * img->pixels[ index + 3 ];
+
+	}
+	else
+	{
+		img->pixels[ index + 0 ] = (1 - intensity) * r32(color) + intensity * img->pixels[ index + 0 ];
+		img->pixels[ index + 1 ] = (1 - intensity) * g32(color) + intensity * img->pixels[ index + 1 ];
+		img->pixels[ index + 2 ] = (1 - intensity) * b32(color) + intensity * img->pixels[ index + 2 ];
+	}
+}
+
+void imageio_draw_line( image_t* img, int x0, int y0, int x1, int y1, uint32_t color )
+{
+	int dx =  abs( x1 - x0 );
+	int dy = -abs( y1 - y0 );
+	int sx = x0 < x1 ? 1 : -1;
+	int sy = y0 < y1 ? 1 : -1;
+	int err = dx + dy;
+	int	e2; /* error value e_xy */
+
+	for(;;)
+	{
+		imageio_set_pixel( img, x0, y0, color );
+		if( x0==x1 && y0==y1 ) break;
+		e2 = 2 * err;
+		if( e2 >= dy ) { err += dy; x0 += sx; } /* e_xy+e_x > 0 */
+		if( e2 <= dx ) { err += dx; y0 += sy; } /* e_xy+e_y < 0 */
+	}
+}
+
+void imageio_draw_line_aa( image_t* img, int x0, int y0, int x1, int y1, uint32_t color )
+{
+	int dx = abs(x1-x0), sx = x0<x1 ? 1 : -1;
+	int dy = abs(y1-y0), sy = y0<y1 ? 1 : -1;
+	int err = dx-dy, e2, x2;                       /* error value e_xy */
+	int ed = dx+dy == 0 ? 1 : sqrtf( dx * dx + dy * dy );
+
+	for ( ; ; ){                                         /* pixel loop */
+		imageio_set_pixel_aa( img, x0, y0, color, 1.0f*abs(err-dx+dy)/ed);
+		e2 = err; x2 = x0;
+		if( 2*e2 >= -dx) {                                    /* x step */
+			if( x0 == x1) break;
+			if( e2+dy < ed) imageio_set_pixel_aa( img, x0, y0+sy, color, 1.0f*(e2+dy)/ed);
+			err -= dy; x0 += sx;
+		}
+		if( 2*e2 <= dy) {                                     /* y step */
+			if( y0 == y1) break;
+			if( dx-e2 < ed) imageio_set_pixel_aa( img, x2+sx, y0, color, 1.0f*(dx-e2)/ed);
+			err += dx; y0 += sy;
+		}
+	}
+}
+
+void imageio_draw_rect( image_t* img, int x, int y, int w, int h, uint32_t color )
+{
+	imageio_draw_line( img,     x,     y, x + w,     y, color );
+	imageio_draw_line( img, x + w,     y, x + w, y + h, color );
+	imageio_draw_line( img,     x, y + h, x + w, y + h, color );
+	imageio_draw_line( img,     x,     y,     x, y + h, color );
+}
+
+void imageio_draw_rect_filled( image_t* img, int x, int y, int w, int h, uint32_t color )
+{
+	int end = y + h;
+	for( ; y < end; y++ )
+	{
+		imageio_draw_line( img, x, y, x + w, y, color );
+	}
+}
+
+void imageio_draw_circle( image_t* img, int xm, int ym, int radius, uint32_t color )
+{
+	int x = -radius, y = 0, err = 2-2*radius; /* II. Quadrant */
+	do {
+		imageio_set_pixel( img, xm-x, ym+y, color ); /*   I. Quadrant */
+		imageio_set_pixel( img, xm-y, ym-x, color ); /*  II. Quadrant */
+		imageio_set_pixel( img, xm+x, ym-y, color ); /* III. Quadrant */
+		imageio_set_pixel( img, xm+y, ym+x, color ); /*  IV. Quadrant */
+		radius = err;
+		if( radius <= y) err += ++y*2+1;           /* e_xy+e_y < 0 */
+		if( radius > x || err > y) err += ++x*2+1; /* e_xy+e_x > 0 or no 2nd y-step */
+	} while (x < 0);
+}
+
+void imageio_draw_circle_aa( image_t* img, int xm, int ym, int radius, uint32_t color )
+{
+	int x = -radius, y = 0;
+	int x2, e2, err = 2-2*radius;
+	float intensity;
+	radius = 1-err;
+	do {
+		intensity = 1.0f*abs(err-2*(x+y)-2)/radius;
+		imageio_set_pixel_aa( img, xm-x, ym+y, color, intensity );
+		imageio_set_pixel_aa( img, xm-y, ym-x, color, intensity );
+		imageio_set_pixel_aa( img, xm+x, ym-y, color, intensity );
+		imageio_set_pixel_aa( img, xm+y, ym+x, color, intensity );
+		e2 = err; x2 = x;
+		if( err+y > 0) {
+			intensity = 1.0f*(err-2*x-1)/radius;
+			if( intensity < 1.0f) {
+				imageio_set_pixel_aa( img, xm-x, ym+y+1, color, intensity );
+				imageio_set_pixel_aa( img, xm-y-1, ym-x, color, intensity );
+				imageio_set_pixel_aa( img, xm+x, ym-y-1, color, intensity );
+				imageio_set_pixel_aa( img, xm+y+1, ym+x, color, intensity );
+			}
+			err += ++x*2+1;
+		}
+		if( e2+x2 <= 0) {
+			intensity = 1.0f*(2*y+3-e2)/radius;
+			if( intensity < 1.0f) {
+				imageio_set_pixel_aa( img, xm-x2-1, ym+y, color, intensity );
+				imageio_set_pixel_aa( img, xm-y, ym-x2-1, color, intensity );
+				imageio_set_pixel_aa( img, xm+x2+1, ym-y, color, intensity );
+				imageio_set_pixel_aa( img, xm+y, ym+x2+1, color, intensity );
+			}
+			err += ++y*2+1;
+		}
+	} while (x < 0);
+}
+
+void imageio_draw_circle_filled( image_t* img, int xm, int ym, int radius, uint32_t color )
+{
+	int x = -radius, y = 0, err = 2-2*radius; /* II. Quadrant */
+	do {
+		imageio_draw_line( img, xm-x, ym+y, xm+x, ym+y, color );
+		imageio_draw_line( img, xm-x, ym-y, xm+x, ym-y, color );
+		radius = err;
+		if( radius <= y) err += ++y*2+1;           /* e_xy+e_y < 0 */
+		if( radius > x || err > y) err += ++x*2+1; /* e_xy+e_x > 0 or no 2nd y-step */
+	} while (x < 0);
+}
+
+void imageio_draw_circle_filled_aa( image_t* img, int xm, int ym, int radius, uint32_t color )
+{
+	imageio_draw_circle_aa( img, xm, ym, radius, color );
+	imageio_draw_circle_filled( img, xm, ym, radius, color );
+}
+
+void imageio_draw_pie_slice( image_t* img, int xm, int ym, float start_angle, float end_angle, int radius, uint32_t color )
+{
+	float step = 0.05f;
+
+	int x = xm + radius * cosf(start_angle);
+	int y = ym + radius * sinf(start_angle);
+	int xn;
+	int yn;
+
+	imageio_draw_line( img, xm, ym, xm + radius * cosf(start_angle), ym + radius * sinf(start_angle), color );
+	for( float a = start_angle; a < end_angle; a += step )
+	{
+		xn = xm + radius * cosf(a);
+		yn = ym + radius * sinf(a);
+		imageio_draw_line( img, x, y, xn, yn, color );
+		x = xn;
+		y = yn;
+	}
+	xn = xm + radius * cosf(end_angle);
+	yn = ym + radius * sinf(end_angle);
+
+	imageio_draw_line( img, x, y, xn, yn, color );
+	imageio_draw_line( img, xm, ym, xm + radius * cosf(end_angle), ym + radius * sinf(end_angle), color );
+}
+
+void imageio_draw_pie_slice_aa( image_t* img, int xm, int ym, float start_angle, float end_angle, int radius, uint32_t color )
+{
+	float step = 0.05f;
+
+	int x = xm + radius * cosf(start_angle);
+	int y = ym + radius * sinf(start_angle);
+	int xn;
+	int yn;
+
+	imageio_draw_line_aa( img, xm, ym, xm + radius * cosf(start_angle), ym + radius * sinf(start_angle), color );
+	for( float a = start_angle; a < end_angle; a += step )
+	{
+		xn = xm + radius * cosf(a);
+		yn = ym + radius * sinf(a);
+		imageio_draw_line_aa( img, x, y, xn, yn, color );
+		x = xn;
+		y = yn;
+	}
+	xn = xm + radius * cosf(end_angle);
+	yn = ym + radius * sinf(end_angle);
+
+	imageio_draw_line_aa( img, x, y, xn, yn, color );
+	imageio_draw_line_aa( img, xm, ym, xm + radius * cosf(end_angle), ym + radius * sinf(end_angle), color );
 }

@@ -1,16 +1,16 @@
 /*
- * Copyright (C) 2010-2014 Joseph A. Marrero.  http://www.manvscode.com/
- * 
+ * Copyright (C) 2009-2015 Joseph A. Marrero.  http://www.manvscode.com/
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -24,7 +24,7 @@
 
 #ifdef __cplusplus
 extern "C" {
-#endif 
+#endif
 
 #if defined(WIN32) && defined(DLL)
 #ifdef EXPORT_DLL
@@ -103,6 +103,7 @@ imageio_api typedef struct imageio_image {
 imageio_api bool imageio_load          ( image_t* img, const char* filename, image_file_format_t* fmt );
 imageio_api bool imageio_image_load    ( image_t* img, const char* filename, image_file_format_t format );
 imageio_api bool imageio_image_save    ( const image_t* img, const char* filename, image_file_format_t format );
+imageio_api bool imageio_image_create  ( image_t* img, uint16_t width, uint16_t height, uint8_t bit_depth );
 imageio_api void imageio_image_destroy ( image_t* img );
 imageio_api void imageio_image_resize  ( uint32_t src_width, uint32_t src_height, const uint8_t* src_bitmap,
                                          uint32_t dst_width, uint32_t dst_height, uint8_t* dst_bitmap, uint32_t bit_depth,
@@ -112,6 +113,10 @@ imageio_api bool imageio_blit          ( uint32_t pos_x, uint32_t pos_y,
                                          uint32_t src_width, uint32_t src_height, uint32_t src_bytes_per_pixel, uint8_t* src_pixels );
 
 
+static inline size_t imageio_image_size( const image_t* img )
+{
+	return img->width * img->height * (img->bit_depth >> 3);
+}
 
 imageio_api typedef enum imageio_blend_mode {
 	IMAGEIO_BLEND_NORMAL,
@@ -166,18 +171,32 @@ imageio_api bool imageio_is_opaque                ( const image_t* img, bool* p_
 imageio_api const char* imageio_image_string  ( const image_t* img );
 
 
-#define rgba(r,g,b,a)	( (r) << 24 || (g) << 16 || (b) << 8 || (a) ) // 4 bytes
-#define r32(color)		( ((color) & 0xFF000000) >> 24 )
-#define g32(color)		( ((color) & 0x00FF0000) >> 16 )
-#define b32(color)		( ((color) & 0x0000FF00) >> 8 )
-#define a32(color)		( ((color) & 0x000000FF) >> 0)
+#define rgba(r,g,b,a)	( (((uint8_t)(r)) << 24) | (((uint8_t)(g)) << 16) | (((uint8_t)(b)) << 8) | ((uint8_t)(a)) ) // 4 bytes
+#define r32(color)		( ((color) >> 24) & 255 )
+#define g32(color)		( ((color) >> 16) & 255 )
+#define b32(color)		( ((color) >> 8 ) & 255 )
+#define a32(color)		  ((color) & 255)
 
-#define rgb(r,g,b)		( (r) << 16 || (g) << 8 || (b) )
-#define r16(color)		( ((color) & 0xFF0000) >> 16 )
-#define g16(color)		( ((color) & 0x00FF00) >> 8 )
-#define b16(color)		( ((color) & 0x0000FF) >> 0 )
+#define rgb(r,g,b)		( ((r) << 16) | ((g) << 8) | (b) )
+#define r24(color)		( ((color) >> 16) & 255)
+#define g24(color)		( ((color) >> 8 ) & 255)
+#define b24(color)	 	  ((color) & 255)
+
+uint32_t imageio_get_pixel             ( image_t* img, int x, int y );
+void     imageio_set_pixel             ( image_t* img, int x, int y, uint32_t color );
+void     imageio_set_pixel_aa          ( image_t* img, int x, int y, uint32_t color, float intensity );
+void     imageio_draw_line             ( image_t* img, int x0, int y0, int x1, int y1, uint32_t color );
+void     imageio_draw_line_aa          ( image_t* img, int x0, int y0, int x1, int y1, uint32_t color );
+void     imageio_draw_rect             ( image_t* img, int x, int y, int w, int h, uint32_t color );
+void     imageio_draw_rect_filled      ( image_t* img, int x, int y, int w, int h, uint32_t color );
+void     imageio_draw_circle           ( image_t* img, int xm, int ym, int radius, uint32_t color );
+void     imageio_draw_circle_aa        ( image_t* img, int xm, int ym, int radius, uint32_t color );
+void     imageio_draw_circle_filled    ( image_t* img, int xm, int ym, int radius, uint32_t color );
+void     imageio_draw_circle_filled_aa ( image_t* img, int xm, int ym, int radius, uint32_t color );
+void     imageio_draw_pie_slice        ( image_t* img, int xm, int ym, float start_angle, float end_angle, int radius, uint32_t color );
+void     imageio_draw_pie_slice_aa     ( image_t* img, int xm, int ym, float start_angle, float end_angle, int radius, uint32_t color );
 
 #ifdef __cplusplus
 }
-#endif 
+#endif
 #endif // _IMAGEIO_H_
