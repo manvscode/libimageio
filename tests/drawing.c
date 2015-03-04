@@ -37,8 +37,8 @@ int main( int argc, char* argv[] )
 	srand( time(NULL) );
 
 	// Fill with white
-	#if 0
-	memset( img.pixels, 0, img.width * img.height * img.channels );
+	#if 1
+	memset( img.pixels, 0xaa, img.width * img.height * img.channels );
 	#else
 	for( int y = 0; y < img.height; y++ )
 	{
@@ -54,13 +54,14 @@ int main( int argc, char* argv[] )
 	}
 	#endif
 
-
+	/*
 	for( int l = 0; l < 100; l++ )
 	{
 		imageio_draw_line_aa( &img, rand() % img.width, rand() % img.height,
 			   	rand() % img.width, rand() % img.height,
 				rgba(rand() % 255, rand() % 255, rand() % 255, 255) );
 	}
+	*/
 
 	imageio_draw_circle_filled_aa( &img, 200, 200, img.width * 0.20f, rgba(0xff, 0x00, 0x00, 0x55) );
 	imageio_draw_circle_aa( &img, 200, 200, img.width * 0.20f, rgba(0, 0, 0, 0xFF) );
@@ -70,7 +71,93 @@ int main( int argc, char* argv[] )
 	imageio_draw_rect_filled( &img, 50, 50, 100, 50, rgba(255, 255, 0, 0x66) );
 	imageio_draw_rect( &img, 50, 50, 100, 50, rgba(0, 0, 0, 255) );
 
-	//imageio_draw_pie_slice( &img, 250, 250, deg2rad(220), deg2rad(290), img.width * 0.20f, rgba(22, 22, 255, 255) );
+	imageio_draw_pie_slice( &img, 50, 450, deg2rad(10), deg2rad(35), img.width * 0.20f, rgba(22, 22, 255, 255) );
+	imageio_draw_pie_slice_aa( &img, 50, 450, deg2rad(10), deg2rad(35), img.width * 0.20f, rgba(22, 22, 255, 255) );
+
+#if 0
+	const int hexagon_x[] = {
+		480 + 100 * cos(deg2rad(1 * 60)),
+		480 + 100 * cos(deg2rad(2 * 60)),
+		480 + 100 * cos(deg2rad(3 * 60)),
+		480 + 100 * cos(deg2rad(4 * 60)),
+		480 + 100 * cos(deg2rad(5 * 60)),
+		480 + 100 * cos(deg2rad(6 * 60))
+	};
+	const int hexagon_y[] = {
+		110 + 100 * sin(deg2rad(1 * 60)),
+		110 + 100 * sin(deg2rad(2 * 60)),
+		110 + 100 * sin(deg2rad(3 * 60)),
+		110 + 100 * sin(deg2rad(4 * 60)),
+		110 + 100 * sin(deg2rad(5 * 60)),
+		110 + 100 * sin(deg2rad(6 * 60))
+	};
+
+	imageio_draw_polygon_filled( &img, hexagon_x, hexagon_y, 6, rgba(255, 0, 0, 255) );
+	imageio_draw_polygon_aa( &img, hexagon_x, hexagon_y, 6, rgba(255, 255, 0, 255) );
+#endif
+
+#if 0
+	const int octagon_x[] = {
+		300 + 50 * cos(deg2rad(1 * 45)),
+		300 + 50 * cos(deg2rad(2 * 45)),
+		300 + 50 * cos(deg2rad(3 * 45)),
+		300 + 50 * cos(deg2rad(4 * 45)),
+		300 + 50 * cos(deg2rad(5 * 45)),
+		300 + 50 * cos(deg2rad(6 * 45)),
+		300 + 50 * cos(deg2rad(7 * 45)),
+		300 + 50 * cos(deg2rad(8 * 45))
+	};
+	const int octagon_y[] = {
+		300 + 50 * sin(deg2rad(1 * 45)),
+		300 + 50 * sin(deg2rad(2 * 45)),
+		300 + 50 * sin(deg2rad(3 * 45)),
+		300 + 50 * sin(deg2rad(4 * 45)),
+		300 + 50 * sin(deg2rad(5 * 45)),
+		300 + 50 * sin(deg2rad(6 * 45)),
+		300 + 50 * sin(deg2rad(7 * 45)),
+		300 + 50 * sin(deg2rad(8 * 45))
+	};
+
+	imageio_draw_polygon_filled( &img, octagon_x, octagon_y, 8, rgba(255, 0, 255, 255) );
+	imageio_draw_polygon_aa( &img, octagon_x, octagon_y, 8, rgba(0, 0, 0, 255) );
+#endif
+
+#if 0
+	const int square_x[] = {
+		75 + 50 * cos(deg2rad(0 * 90)),
+		75 + 50 * cos(deg2rad(1 * 90)),
+		75 + 50 * cos(deg2rad(2 * 90)),
+		75 + 50 * cos(deg2rad(3 * 90))
+	};
+	const int square_y[] = {
+		450 + 50 * sin(deg2rad(0 * 90)),
+		450 + 50 * sin(deg2rad(1 * 90)),
+		450 + 50 * sin(deg2rad(2 * 90)),
+		450 + 50 * sin(deg2rad(3 * 90))
+	};
+
+	imageio_draw_polygon_filled( &img, square_x, square_y, 4, rgba(255, 255, 0, 255) );
+	imageio_draw_polygon_aa( &img, square_x, square_y, 4, rgba(0, 0, 0, 255) );
+#endif
+
+	const int triangle_x[] = {
+		525 + 60 * cos(deg2rad(1 * 120)),
+		525 + 60 * cos(deg2rad(2 * 120)),
+		525 + 60 * cos(deg2rad(3 * 120)),
+	};
+	const int triangle_y[] = {
+		525 + 60 * sin(deg2rad(1 * 120)),
+		525 + 60 * sin(deg2rad(2 * 120)),
+		525 + 60 * sin(deg2rad(3 * 120)),
+	};
+
+	imageio_draw_polygon_filled( &img, triangle_x, triangle_y, 3, rgba(0, 0, 255, 255) );
+	imageio_draw_polygon_aa( &img, triangle_x, triangle_y, 3, rgba(0, 0, 0, 255) );
+
+	//imageio_draw_line( &img, 267, 0, 267, img.height - 1, rgba(255,255,255,255) );
+	//imageio_draw_line( &img, 289, 0, 289, img.height - 1, rgba(255,255,255,255) );
+	//imageio_draw_line( &img, 310, 0, 310, img.height - 1, rgba(255,255,255,255) );
+	//imageio_draw_line( &img, 330, 0, 330, img.height - 1, rgba(255,255,255,255) );
 
 	imageio_image_save( &img, "drawing.png", IMAGEIO_PNG );
 

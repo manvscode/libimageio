@@ -1,6 +1,7 @@
 
 # Add new files in alphabetical order. Thanks.
 libimageio_src = imageio.c \
+				 charts.c \
 ../extern/libpng-1.6.15/png.c \
 ../extern/libpng-1.6.15/pngerror.c \
 ../extern/libpng-1.6.15/pngget.c \
@@ -37,13 +38,13 @@ libimageio_src = imageio.c \
 
 
 # Add new files in alphabetical order. Thanks.
-libimageio_headers = imageio.h blending.h
+libimageio_headers = imageio.h blending.h charts.h
 
 library_includedir      = $(includedir)/libimageio/
 library_include_HEADERS = $(libimageio_headers)
 
 # Library
-lib_LTLIBRARIES                           = $(top_builddir)/lib/libimageio.la 
+lib_LTLIBRARIES                           = $(top_builddir)/lib/libimageio.la
 __top_builddir__lib_libimageio_la_SOURCES = $(libimageio_src)
 __top_builddir__lib_libimageio_la_CFLAGS  = -I $(top_builddir)/extern/libpng-1.6.15/ -I $(top_builddir)/extern/zlib-1.2.8/
 
