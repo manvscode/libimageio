@@ -2373,20 +2373,31 @@ void imageio_draw_circle_aa( image_t* img, int xm, int ym, int radius, uint32_t 
 
 void imageio_draw_circle_filled( image_t* img, int xm, int ym, int radius, uint32_t color )
 {
-	int x = -radius, y = 0, err = 2-2*radius; /* II. Quadrant */
+	int x = -radius, y = 0, err = 2-2*radius;
 	do {
-		imageio_draw_line( img, xm-x, ym+y, xm+x, ym+y, color );
-		imageio_draw_line( img, xm-x, ym-y, xm+x, ym-y, color );
+		imageio_draw_line( img, xm - x, ym + y, xm + x, ym + y, color );
+		imageio_draw_line( img, xm - x, ym - y, xm + x, ym - y, color );
 		radius = err;
-		if( radius <= y) err += ++y*2+1;           /* e_xy+e_y < 0 */
-		if( radius > x || err > y) err += ++x*2+1; /* e_xy+e_x > 0 or no 2nd y-step */
+		if( radius <= y) err += ++y*2+1;
+		if( radius > x || err > y) err += ++x*2+1;
 	} while (x < 0);
 }
 
 void imageio_draw_circle_filled_aa( image_t* img, int xm, int ym, int radius, uint32_t color )
 {
 	imageio_draw_circle_aa( img, xm, ym, radius, color );
+#if 1
 	imageio_draw_circle_filled( img, xm, ym, radius, color );
+#else
+	int x = -radius, y = 0, err = 2-2*radius; /* II. Quadrant */
+	do {
+		imageio_draw_line_aa( img, xm-x, ym+y, xm+x, ym+y, color );
+		imageio_draw_line_aa( img, xm-x, ym-y, xm+x, ym-y, color );
+		radius = err;
+		if( radius <= y) err += ++y*2+1;           /* e_xy+e_y < 0 */
+		if( radius > x || err > y) err += ++x*2+1; /* e_xy+e_x > 0 or no 2nd y-step */
+	} while (x < 0);
+#endif
 }
 
 void imageio_draw_polygon( image_t* img, const int x[], const int y[], size_t size, uint32_t color )
@@ -2454,29 +2465,60 @@ static bool line_intersection_point_intercept( float m1, float b1, float m2, flo
 }
 // m * x + b = y
 // (y - b) / m = x
-static bool line_intersection_with_horizontal_line( float m, float b, float y, float* x )
+static bool line_intersection_with_horizontal_line( int x0, int y0, int x1, int y1, int y, float* x )
 {
-	if( fabs(m) < FLT_EPSILON )
+	bool result = true;
+
+	if( x1 == x0 )
 	{
-		/* Lines are parrallel */
-		return false;
+		/* Line is vertical */
+		*x = x1;
+	}
+	else
+	{
+		if( y1 == y0 )
+		{
+			/* Line is horizontal */
+			//if( y0 == y )
+			if( (y0 <= y && y <= y1) ||
+			    (y1 <= y && y <= y0) )
+			{
+				*x = x0;
+			}
+			else
+			{
+				/* Lines are parallel */
+
+				printf( "y0=%d, y1=%d, y=%d\n", y0, y1, y);
+				result = false;
+			}
+		}
+		else
+		{
+			float m = ((float)y1 - y0) / ((float)x1 - x0);
+			float b = y1 - m * x1;
+
+			*x = (y - b) / m;
+		}
 	}
 
-	*x = (y - b) / m;
-
-	return true;
+	return result;
 }
-
 
 void imageio_draw_polygon_filled( image_t* img, const int x[], const int y[], size_t size, uint32_t color )
 {
+	if( size < 3 )
+	{
+		return;
+	}
+
 	int min_x = img->width;
 	int max_x = 0;
 	int min_y = img->height;
 	int max_y = 0;
 	int intersections_x[ size ];
 	int intersections_y[ size ];
-	size_t count = 0;
+	size_t intersection_count = 0;
 
 	for( size_t i = 0; i < size; i++ )
 	{
@@ -2485,11 +2527,6 @@ void imageio_draw_polygon_filled( image_t* img, const int x[], const int y[], si
 		if( y[i] < min_y ) min_y = y[i];
 		if( y[i] > max_y ) max_y = y[i];
 	}
-	//min_y = 254;
-	//max_y = 255;
-
-
-	//printf( "mx = %d, mX = %d, my = %d, mY= %d\n", min_x, max_x, min_y, max_y );
 
 
 	float m = 0;
@@ -2497,65 +2534,85 @@ void imageio_draw_polygon_filled( image_t* img, const int x[], const int y[], si
 
 	for( int Y = min_y; Y < max_y; Y++ )
 	{
-		for( size_t i = 0; i < (size - 1); i++ )
+		/* Find intersections */
 		{
-			m = ((float)y[i + 1] - y[i + 0]) / ((float)x[i + 1] - x[i + 0]);
-			b = y[i + 1] - m * x[i + 1];
+			for( size_t i = 0; i < (size - 1); i++ )
+			{
+				float sx;
+				if( line_intersection_with_horizontal_line( x[i + 0], y[i + 0], x[i + 1], y[i + 1], Y, &sx ) )
+				{
+					if( (sx >= x[i + 0] && sx <= x[i + 1]) ||
+						(sx >= x[i + 1] && sx <= x[i + 0]) )
+					{
+						intersections_x[ intersection_count ] = (int) sx;
+						intersections_y[ intersection_count ] = Y;
+
+						intersection_count += 1;
+					}
+				}
+			}
 
 			float sx;
-			if( line_intersection_with_horizontal_line( m, b, Y, &sx ) )
+			if( line_intersection_with_horizontal_line( x[size - 1], y[size - 1], x[0], y[0], Y, &sx ) )
 			{
-				if( (sx >= x[i + 0] && sx <= x[i + 1]) ||
-				    (sx >= x[i + 1] && sx <= x[i + 0]) )
+				if( (sx >= x[size-1] && sx <= x[0]) ||
+					(sx >= x[0] && sx <= x[size-1]) )
 				{
-					intersections_x[ count ] = (int) sx;
-					intersections_y[ count ] = Y;
-					printf( "%zu X at (%d,%d)   slope = %.4f, Int. = %.4f\n", count, (int)sx, Y, m, b );
-					count += 1;
+					intersections_x[ intersection_count ] = (int) sx;
+					intersections_y[ intersection_count ] = Y;
+
+					intersection_count += 1;
 				}
 			}
 		}
 
-		m = ((float)y[ (size-1) ] - y[0]) / ((float)x[(size-1)] - x[0]);
-		b = y[0] - m * x[0];
-
-		float sx;
-		if( line_intersection_with_horizontal_line( m, b, Y, &sx ) )
+		if( intersection_count >= 2 )
 		{
-			if( (sx >= x[size-1] && sx <= x[0]) ||
-			    (sx >= x[0] && sx <= x[size-1]) )
+			bool swapped = true;
+
+			/* Sort intersections */
+			while( swapped )
 			{
-				intersections_x[ count ] = (int) sx;
-				intersections_y[ count ] = Y;
-				printf( "%zu X at (%d,%d)   slope = %.4f, Int. = %.4f\n", count, (int)sx, Y, m, b );
-				count += 1;
+				swapped = false;
+				for( size_t i = 1; i < intersection_count; i++ )
+				{
+					if( intersections_x[ i ] < intersections_x[ i - 1 ] )
+					{
+						int tmp_x = intersections_x[ i ];
+						intersections_x[ i ]     = intersections_x[ i - 1 ];
+						intersections_x[ i - 1 ] = tmp_x;
+
+						int tmp_y = intersections_y[ i ];
+						intersections_y[ i ]     = intersections_y[ i - 1 ];
+						intersections_y[ i - 1 ] = tmp_y;
+						swapped = true;
+					}
+				}
 			}
-		}
 
-
-		if( count >= 2 )
-		{
-			printf( "Intersections found = %zu\n", count );
-			for( size_t c = 0; c < (count - 1); c++ )
+			/* Draw polygon scan lines */
 			{
+				for( size_t c = 0; c < (intersection_count - 1); c++ )
+				{
+					imageio_draw_line( img,
+							intersections_x[ c + 0 ], intersections_y[ c + 0 ],
+							intersections_x[ c + 1 ], intersections_y[ c + 1 ],
+							color );
+				}
 				imageio_draw_line( img,
-						intersections_x[ c + 0 ], intersections_y[ c + 0 ],
-						intersections_x[ c + 1 ], intersections_y[ c + 1 ],
+						intersections_x[ (intersection_count-1) ], intersections_y[ (intersection_count-1) ],
+						intersections_x[ 0 ], intersections_y[ 0 ],
 						color );
 			}
-			imageio_draw_line( img,
-					intersections_x[ (count-1) ], intersections_y[ (count-1) ],
-					intersections_x[ 0 ], intersections_y[ 0 ],
-					color );
 		}
-		count = 0;
-	}
-}
+		else
+		{
 
-void imageio_draw_polygon_filled_aa( image_t* img, const int x[], const int y[], size_t size, uint32_t color )
-{
-	assert( false );
-	// TODO:
+			printf( "Oops at y = %d\n", Y );
+		}
+
+		intersection_count = 0;
+	}
 }
 
 void imageio_draw_pie_slice( image_t* img, int xm, int ym, float start_angle, float end_angle, int radius, uint32_t color )
@@ -2607,3 +2664,30 @@ void imageio_draw_pie_slice_aa( image_t* img, int xm, int ym, float start_angle,
 	imageio_draw_line_aa( img, x, y, xn, yn, color );
 	imageio_draw_line_aa( img, xm, ym, xm + radius * cosf(end_angle), ym + radius * sinf(end_angle), color );
 }
+
+
+void imageio_draw_pie_slice_filled( image_t* img, int xm, int ym, float start_angle, float end_angle, int radius, uint32_t color )
+{
+	//float step = 0.015f;
+	float step = 0.1f;
+
+	int count = (int) ((end_angle - start_angle) / step) + 2;
+	int points_x[ count ];
+	int points_y[ count ];
+	float angle = start_angle;
+
+	points_x[ 0 ] = xm;
+	points_y[ 0 ] = ym;
+
+	for( int i = 1; i < count; i++ )
+	{
+		points_x[ i ] = xm + radius * cosf(angle);
+		points_y[ i ] = ym + radius * sinf(angle);
+
+		angle += step;
+	}
+
+	imageio_draw_polygon_filled( img, points_x, points_y, count, color );
+}
+
+

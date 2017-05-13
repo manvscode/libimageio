@@ -21,6 +21,7 @@
  */
 #ifndef _IMAGEIO_H_
 #define _IMAGEIO_H_
+#include <stddef.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -196,9 +197,9 @@ void     imageio_draw_circle_filled_aa ( image_t* img, int xm, int ym, int radiu
 void     imageio_draw_polygon          ( image_t* img, const int x[], const int y[], size_t size, uint32_t color );
 void     imageio_draw_polygon_aa       ( image_t* img, const int x[], const int y[], size_t size, uint32_t color );
 void     imageio_draw_polygon_filled   ( image_t* img, const int x[], const int y[], size_t size, uint32_t color );
-void     imageio_draw_polygon_filled_aa( image_t* img, const int x[], const int y[], size_t size, uint32_t color );
 void     imageio_draw_pie_slice        ( image_t* img, int xm, int ym, float start_angle, float end_angle, int radius, uint32_t color );
 void     imageio_draw_pie_slice_aa     ( image_t* img, int xm, int ym, float start_angle, float end_angle, int radius, uint32_t color );
+void     imageio_draw_pie_slice_filled ( image_t* img, int xm, int ym, float start_angle, float end_angle, int radius, uint32_t color );
 
 #ifdef __cplusplus
 }
