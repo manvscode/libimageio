@@ -1,5 +1,8 @@
 SUBDIRS = src tests
 
+pkgconfigdir = $(libdir)/pkgconfig
+pkgconfig_DATA = imageio.pc
+
 
 Android.mk: Makefile.am
 	@androgenizer -:PROJECT libimageio \

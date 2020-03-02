@@ -1,0 +1,12 @@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+libdir=@libdir@
+includedir=@includedir@
+
+Name: @PACKAGE_NAME@
+Description: A simple library for loading and saving BMP, TGA, and PNG images.
+URL: @PACKAGE_URL@
+Version: @PACKAGE_VERSION@
+Requires:
+Libs: -limageio -L${libdir} -lm
+Cflags: -I${includedir}/@PACKAGE_NAME@

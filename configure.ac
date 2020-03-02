@@ -1,6 +1,6 @@
 AC_PREREQ(2.67)
 AC_INIT([libimageio], [0.6], [manvscode@manvscode.com], [libimageio], [http://www.manvscode.com/])
-AM_INIT_AUTOMAKE([1.13 subdir-objects foreign silent-rules -Wall -Werror])
+AM_INIT_AUTOMAKE([1.13 subdir-objects foreign dist-zip silent-rules -Wall -Werror])
 
 AM_SILENT_RULES([yes])
 
@@ -20,13 +20,6 @@ AH_BOTTOM([
 # If big endian define WORDS_BIGENDIAN
 AC_C_BIGENDIAN
 
-#DFLAGS="-D DEBUG"
-
-#CFLAGS="$CFLAGS -g -ggdb -O0"
-CFLAGS="$CFLAGS -O2"
-LDFLAGS="-lm $LDFLAGS"
-
-
 
 AC_ARG_ENABLE([tests],
 	[AS_HELP_STRING([--disable-tests], [Enable test programs.])],
@@ -43,17 +36,24 @@ AM_PROG_LIBTOOL
 
 AC_PROG_INSTALL
 
-echo " ------------------------------ "
-echo ""
-echo "   CFLAGS = $CFLAGS"
-echo "  LDFLAGS = $LDFLAGS"
-echo ""
-echo " ------------------------------ "
+echo "------------------------------------------------------------------------------"
+if [test -z "$CFLAGS"]; then
+	echo "  CFLAGS: Not set"
+else
+	echo "  CFLAGS: $CFLAGS"
+fi
+if [test -z "$LDFLAGS"]; then
+	echo " LDFLAGS: Not set"
+else
+	echo " LDFLAGS: $LDFLAGS"
+fi
+echo "------------------------------------------------------------------------------"
 
 AC_CONFIG_FILES([
 	Makefile
 	src/Makefile
 	tests/Makefile
+	imageio.pc
 ])
 
 AC_OUTPUT
