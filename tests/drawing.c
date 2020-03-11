@@ -25,7 +25,7 @@
 #include <math.h>
 #include <time.h>
 #include <assert.h>
-#include <libutility/utility.h>
+#include <utility.h>
 #include "../src/imageio.h"
 
 #define deg2rad(a)   ((a) * M_PI / 180.0f)

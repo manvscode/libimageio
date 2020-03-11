@@ -1,6 +1,3 @@
-# Compiled Binaries
-bin/*
-
 # Compiled Object files
 *.slo
 *.lo
@@ -24,33 +21,31 @@ bin/*
 # Log Files
 *.log
 
-# Test Programs 
-bin/8-puzzle*
-bin/15-puzzle*
-bin/pathfinding*
+# Test Programs
+bin/
+
+# External dependencies
+extern/
 
 # Autoconf files
 Makefile
 Makefile.in
 aclocal.m4
-configure
 ar-lib
-libtool
-compile
-ltmain.sh
 autom4te.cache
+compile
 config.guess
 config.status
 config.sub
-bin/.libs
-bin/.dirstamp
-lib/.libs
+configure
+depcomp
+install-sh
 lib/.dirstamp
+lib/.libs
+libtool
+ltmain.sh
+missing
 src/.deps
 src/stamp-h1
 tests/.deps
-src/libcsearch-config.h
-src/libcsearch-config.h.in
-depcomp
-install-sh
-missing
+imageio.pc

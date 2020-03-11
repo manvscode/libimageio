@@ -1,5 +1,5 @@
 AC_PREREQ(2.67)
-AC_INIT([libimageio], [0.6], [manvscode@manvscode.com], [libimageio], [http://www.manvscode.com/])
+AC_INIT([libimageio], [0.6.0], [manvscode@manvscode.com], [libimageio], [http://www.manvscode.com/])
 AM_INIT_AUTOMAKE([1.13 subdir-objects foreign dist-zip silent-rules -Wall -Werror])
 
 AM_SILENT_RULES([yes])
@@ -21,13 +21,6 @@ AH_BOTTOM([
 AC_C_BIGENDIAN
 
 
-AC_ARG_ENABLE([tests],
-	[AS_HELP_STRING([--disable-tests], [Enable test programs.])],
-	[:],
-	[enable_tests=no])
-
-AM_CONDITIONAL([ENABLE_TESTS], [test "$enable_tests" = "yes"])
-
 AM_PROG_AR
 LT_INIT([shared static])
 
@@ -35,6 +28,22 @@ AC_PROG_LIBTOOL
 AM_PROG_LIBTOOL
 
 AC_PROG_INSTALL
+
+
+AC_ARG_ENABLE([tests],
+	[AS_HELP_STRING([--disable-tests], [Enable test programs.])],
+	[:],
+	[enable_tests=no])
+
+AM_CONDITIONAL([ENABLE_TESTS], [test "$enable_tests" = "yes"])
+
+if test "x$enable_tests" = "xyes"; then
+	PKG_CHECK_MODULES([UTILITY], [utility],
+		[AC_MSG_NOTICE([Found libutility])],
+		[AC_MSG_ERROR([Missing libutility])],
+	)
+fi
+
 
 echo "------------------------------------------------------------------------------"
 if [test -z "$CFLAGS"]; then

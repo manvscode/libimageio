@@ -8,8 +8,8 @@ $(top_builddir)/bin/drawing \
 $(top_builddir)/bin/charts
 #$(top_builddir)/bin/test-imageio
 
-__top_builddir__bin_test_png_CFLAGS   = -I /usr/local/include
-__top_builddir__bin_test_png_LDFLAGS  = $(top_builddir)/lib/libimageio.la -lutility
+__top_builddir__bin_test_png_CFLAGS   = -I /usr/local/include $(UTILITY_CFLAGS)
+__top_builddir__bin_test_png_LDFLAGS  = $(top_builddir)/lib/libimageio.la $(UTILITY_LIBS)
 __top_builddir__bin_test_png_SOURCES  = test-png.c
 
 __top_builddir__bin_img2c_CFLAGS   = -I /usr/local/include
@@ -20,16 +20,16 @@ __top_builddir__bin_rgb2bgr_CFLAGS   = -I /usr/local/include
 __top_builddir__bin_rgb2bgr_LDFLAGS  = $(top_builddir)/lib/libimageio.la
 __top_builddir__bin_rgb2bgr_SOURCES  = rgb2bgr.c
 
-__top_builddir__bin_blend_CFLAGS   = -I /usr/local/include -L/usr/local/lib
-__top_builddir__bin_blend_LDFLAGS  = $(top_builddir)/lib/libimageio.la
+__top_builddir__bin_blend_CFLAGS   = -I /usr/local/include -L/usr/local/lib $(UTILITY_CFLAGS)
+__top_builddir__bin_blend_LDFLAGS  = $(top_builddir)/lib/libimageio.la $(UTILITY_LIBS)
 __top_builddir__bin_blend_SOURCES  = blend.c
 
-__top_builddir__bin_drawing_CFLAGS   = -I /usr/local/include
-__top_builddir__bin_drawing_LDFLAGS  = $(top_builddir)/lib/libimageio.la
+__top_builddir__bin_drawing_CFLAGS   = -I /usr/local/include $(UTILITY_CFLAGS)
+__top_builddir__bin_drawing_LDFLAGS  = $(top_builddir)/lib/libimageio.la $(UTILITY_LIBS)
 __top_builddir__bin_drawing_SOURCES  = drawing.c
 
-__top_builddir__bin_charts_CFLAGS   = -I /usr/local/include
-__top_builddir__bin_charts_LDFLAGS  = $(top_builddir)/lib/libimageio.la
+__top_builddir__bin_charts_CFLAGS   = -I /usr/local/include $(UTILITY_CFLAGS)
+__top_builddir__bin_charts_LDFLAGS  = $(top_builddir)/lib/libimageio.la $(UTILITY_LIBS)
 __top_builddir__bin_charts_SOURCES  = charts.c
 
 #__top_builddir__bin_test_imageio_LDFLAGS  = -framework OpenGL -lglut $(top_builddir)/lib/libimageio.la

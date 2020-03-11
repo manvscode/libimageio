@@ -21,7 +21,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <err.h>
-#include <libutility/utility.h>
+#include <utility.h>
 #include "../src/imageio.h"
 
 

@@ -24,7 +24,7 @@
 #include <string.h>
 #include <math.h>
 #include <assert.h>
-#include <libutility/utility.h>
+#include <utility.h>
 #include "../src/imageio.h"
 
 int main( int argc, char* argv[] )
