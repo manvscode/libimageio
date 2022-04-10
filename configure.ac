@@ -1,5 +1,5 @@
 AC_PREREQ(2.67)
-AC_INIT([libimageio], [0.6.0], [manvscode@manvscode.com], [libimageio], [http://www.manvscode.com/])
+AC_INIT([libimageio], [0.6.0], [manvscode@gmail.com], [libimageio], [http://www.joemarrero.com/])
 AM_INIT_AUTOMAKE([1.13 subdir-objects foreign dist-zip silent-rules -Wall -Werror])
 
 AM_SILENT_RULES([yes])
@@ -22,7 +22,7 @@ AC_C_BIGENDIAN
 
 
 AM_PROG_AR
-LT_INIT([shared static])
+LT_INIT([static])
 
 AC_PROG_LIBTOOL
 AM_PROG_LIBTOOL

@@ -8,5 +8,5 @@ Description: A simple library for loading and saving BMP, TGA, and PNG images.
 URL: @PACKAGE_URL@
 Version: @PACKAGE_VERSION@
 Requires:
-Libs: -limageio -L${libdir} -lm
+Libs: -l:libimageio.a -L${libdir} -lm
 Cflags: -I${includedir}/@PACKAGE_NAME@
